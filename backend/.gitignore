@@ -1,0 +1,31 @@
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Maven
+target/
+dependency-reduced-pom.xml
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+releases/
+
+# Environment variables (KEEP LOCAL)
+.env
+
+# Temporary files
+*.tmp
+*.bak

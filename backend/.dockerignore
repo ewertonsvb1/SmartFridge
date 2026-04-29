@@ -1,0 +1,7 @@
+target
+.git
+.idea
+*.iml
+*.log
+test.out
+mvn_test*.log

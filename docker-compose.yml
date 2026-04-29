@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: smartfridge-postgres
+    environment:
+      POSTGRES_DB: smartfridge
+      POSTGRES_USER: smartfridge
+      POSTGRES_PASSWORD: smartfridge
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U smartfridge -d smartfridge"]
+      interval: 10s
+      timeout: 5s
+      retries: 8
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: smartfridge-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_URL: jdbc:postgresql://postgres:5432/smartfridge
+      DB_USER: smartfridge
+      DB_PASS: smartfridge
+      JWT_SECRET: change-this-jwt-secret-with-at-least-32-chars
+      CORS_ALLOWED_ORIGINS: http://localhost:8080,http://127.0.0.1:8080
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:

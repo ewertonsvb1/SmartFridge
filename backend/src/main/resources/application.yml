@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: smartfridge-backend
+  profiles:
+    active: dev
+
+app:
+  cors:
+    allowed-origin-patterns: http://localhost:*,http://127.0.0.1:*
+
+jwt:
+  secret: ${JWT_SECRET:dev-only-secret-change-before-prod-32chars}
+  expiration-ms: 86400000

@@ -1,0 +1,7 @@
+.g/
+.gradle-user-home/
+.android-sdk/
+**/build/
+**/.dart_tool/
+backend/target/
+"@ | Add-Content "F:\Projetos\Geladeira\.gitignore"

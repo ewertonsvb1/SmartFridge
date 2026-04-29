@@ -1,0 +1,6 @@
+# Copy this file to android/key.properties and replace values.
+# Do NOT commit android/key.properties.
+storeFile=../keystore/smartfridge-release.jks
+storePassword=CHANGE_ME
+keyAlias=smartfridge
+keyPassword=CHANGE_ME
