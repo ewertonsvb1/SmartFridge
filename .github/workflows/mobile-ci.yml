@@ -54,7 +54,7 @@ jobs:
         if: success()
         with:
           name: android-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: mobile/build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
 
       - name: Upload AAB artifact
@@ -62,5 +62,5 @@ jobs:
         if: success()
         with:
           name: android-aab
-          path: build/app/outputs/bundle/release/app-release.aab
+          path: mobile/build/app/outputs/bundle/release/app-release.aab
           retention-days: 30
