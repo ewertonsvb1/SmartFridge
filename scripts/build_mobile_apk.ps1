@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 param(
-    [string]$ApiBaseUrl,
+    [string]$ApiBaseUrl = "http://192.168.15.12:8080",
     [switch]$Debug
 )
 
@@ -42,7 +42,7 @@ if ($javaMajorVersion -lt 17) {
 }
 
 if ([string]::IsNullOrWhiteSpace($ApiBaseUrl)) {
-    $ApiBaseUrl = Read-Host "Informe a URL da API (exemplo: http://192.168.0.15:8080)"
+    $ApiBaseUrl = Read-Host "Informe a URL da API (exemplo: http://192.168.15.12:8080)"
 }
 
 if ([string]::IsNullOrWhiteSpace($ApiBaseUrl)) {
@@ -50,7 +50,7 @@ if ([string]::IsNullOrWhiteSpace($ApiBaseUrl)) {
 }
 
 if (-not ($ApiBaseUrl -match '^http://')) {
-    throw "Use uma URL HTTP da sua rede local, por exemplo: http://192.168.0.15:8080"
+    throw "Use uma URL HTTP da sua rede local, por exemplo: http://192.168.15.12:8080"
 }
 
 $mobileDir = Join-Path $PSScriptRoot "..\\mobile"
