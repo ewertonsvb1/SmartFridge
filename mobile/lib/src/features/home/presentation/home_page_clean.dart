@@ -169,7 +169,7 @@ class _ProductsTab extends ConsumerWidget {
                       Icon(Icons.eco, color: Color(0xFF44A169), size: 28),
                       SizedBox(width: 6),
                       Text(
-                        'SmartFridge',
+                        'SmartHouse',
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.w800,

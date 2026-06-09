@@ -22,8 +22,21 @@ public class NotificationLogEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 32)
+    private NotificationSourceModule sourceModule;
+
+    @Column(nullable = false)
+    private Long sourceId;
+
+    @Column(nullable = false)
+    private String sourceLabel;
+
+    @Column(nullable = false)
+    private LocalDate sourceDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
     private ProductEntity product;
 
     @Enumerated(EnumType.STRING)

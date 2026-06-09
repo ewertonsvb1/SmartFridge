@@ -11,7 +11,7 @@ void main() {
       ),
     );
 
-    expect(find.text('SmartFridge'), findsOneWidget);
+    expect(find.text('SmartHouse'), findsOneWidget);
     expect(find.widgetWithText(TextField, 'Email'), findsOneWidget);
     expect(find.widgetWithText(TextField, 'Senha'), findsOneWidget);
     expect(find.widgetWithText(FilledButton, 'Entrar'), findsOneWidget);

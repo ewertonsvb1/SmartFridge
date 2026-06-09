@@ -42,9 +42,13 @@ public class NotificationController {
                         log.getId(),
                         log.getType(),
                         log.getEventDate(),
-                        log.getProduct().getId(),
-                        log.getProduct().getName(),
-                        log.getProduct().getExpirationDate(),
+                        log.getSourceModule().name(),
+                        log.getSourceId(),
+                        log.getSourceLabel(),
+                        log.getSourceDate(),
+                        log.getProduct() != null ? log.getProduct().getId() : null,
+                        log.getProduct() != null ? log.getProduct().getName() : null,
+                        log.getProduct() != null ? log.getProduct().getExpirationDate() : null,
                         log.getCreatedAt()
                 ))
                 .toList();

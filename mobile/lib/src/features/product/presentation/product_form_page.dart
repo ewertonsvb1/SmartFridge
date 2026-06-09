@@ -77,7 +77,14 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
     final repo = ref.watch(productRepositoryProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(_isEditing ? 'Editar Produto' : 'Novo Produto')),
+      appBar: AppBar(
+        title: Text(_isEditing ? 'Editar Produto' : 'Novo Produto'),
+        leading: IconButton(
+          onPressed: () => context.go('/home'),
+          icon: const Icon(Icons.home_rounded),
+          tooltip: 'Voltar ao inicio',
+        ),
+      ),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -87,7 +94,9 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
               controller: _nameController,
               decoration: const InputDecoration(labelText: 'Nome'),
               validator: (value) {
-                if (value == null || value.trim().isEmpty) return 'Informe o nome';
+                if (value == null || value.trim().isEmpty) {
+                  return 'Informe o nome';
+                }
                 return null;
               },
             ),
@@ -98,7 +107,9 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
               decoration: const InputDecoration(labelText: 'Quantidade'),
               validator: (value) {
                 final parsed = int.tryParse((value ?? '').trim());
-                if (parsed == null || parsed <= 0) return 'Quantidade deve ser maior que zero';
+                if (parsed == null || parsed <= 0) {
+                  return 'Quantidade deve ser maior que zero';
+                }
                 return null;
               },
             ),
@@ -116,7 +127,9 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                 ),
               ),
               validator: (value) {
-                if (value == null || value.trim().isEmpty) return 'Informe a data de fabricação';
+                if (value == null || value.trim().isEmpty) {
+                  return 'Informe a data de fabricação';
+                }
                 return null;
               },
             ),
@@ -134,7 +147,9 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                 ),
               ),
               validator: (value) {
-                if (value == null || value.trim().isEmpty) return 'Informe a data de validade';
+                if (value == null || value.trim().isEmpty) {
+                  return 'Informe a data de validade';
+                }
                 return null;
               },
             ),
@@ -145,12 +160,16 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                   : () async {
                       if (!_formKey.currentState!.validate()) return;
 
-                      final manufactureDate = DateTime.tryParse(_manuController.text.trim());
-                      final expirationDate = DateTime.tryParse(_expController.text.trim());
+                      final manufactureDate =
+                          DateTime.tryParse(_manuController.text.trim());
+                      final expirationDate =
+                          DateTime.tryParse(_expController.text.trim());
                       if (manufactureDate == null || expirationDate == null) {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Datas inválidas. Use o seletor de data.')),
+                            const SnackBar(
+                                content: Text(
+                                    'Datas inválidas. Use o seletor de data.')),
                           );
                         }
                         return;
@@ -159,7 +178,9 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                       if (expirationDate.isBefore(manufactureDate)) {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Validade não pode ser antes da fabricação.')),
+                            const SnackBar(
+                                content: Text(
+                                    'Validade não pode ser antes da fabricação.')),
                           );
                         }
                         return;
@@ -171,14 +192,16 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                           await repo.update(
                             id: widget.initialProduct!.id,
                             name: _nameController.text.trim(),
-                            quantity: int.parse(_quantityController.text.trim()),
+                            quantity:
+                                int.parse(_quantityController.text.trim()),
                             manufactureDate: _manuController.text.trim(),
                             expirationDate: _expController.text.trim(),
                           );
                         } else {
                           await repo.create(
                             name: _nameController.text.trim(),
-                            quantity: int.parse(_quantityController.text.trim()),
+                            quantity:
+                                int.parse(_quantityController.text.trim()),
                             manufactureDate: _manuController.text.trim(),
                             expirationDate: _expController.text.trim(),
                           );
@@ -212,7 +235,10 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                       }
                     },
               child: _loading
-                  ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2))
                   : const Text('Salvar'),
             )
           ],

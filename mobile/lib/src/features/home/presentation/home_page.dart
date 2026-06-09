@@ -41,7 +41,36 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF4F5F3),
-      body: IndexedStack(index: _currentIndex, children: tabs),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
+              child: Row(
+                children: [
+                  IconButton.filledTonal(
+                    onPressed: () => context.go('/home'),
+                    icon: const Icon(Icons.home_rounded),
+                    tooltip: 'Voltar ao inicio',
+                  ),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Text(
+                      'Geladeira',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF17352E),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(child: IndexedStack(index: _currentIndex, children: tabs)),
+          ],
+        ),
+      ),
       floatingActionButton: _currentIndex == 0
           ? FloatingActionButton(
               onPressed: () => context.push('/product/new'),
@@ -65,13 +94,17 @@ class _HomePageState extends ConsumerState<HomePage> {
                 final selected = states.contains(WidgetState.selected);
                 return IconThemeData(
                   size: 28,
-                  color: selected ? const Color(0xFF2F7F68) : const Color(0xFF808890),
+                  color: selected
+                      ? const Color(0xFF2F7F68)
+                      : const Color(0xFF808890),
                 );
               }),
               labelTextStyle: WidgetStateProperty.resolveWith((states) {
                 final selected = states.contains(WidgetState.selected);
                 return TextStyle(
-                  color: selected ? const Color(0xFF2F7F68) : const Color(0xFF6E7580),
+                  color: selected
+                      ? const Color(0xFF2F7F68)
+                      : const Color(0xFF6E7580),
                   fontSize: 17,
                   fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
                 );
@@ -81,9 +114,12 @@ class _HomePageState extends ConsumerState<HomePage> {
               selectedIndex: _currentIndex,
               onDestinationSelected: (i) => setState(() => _currentIndex = i),
               destinations: const [
-                NavigationDestination(icon: Icon(Icons.kitchen_rounded), label: 'Produtos'),
-                NavigationDestination(icon: Icon(Icons.filter_alt_rounded), label: 'Filtros'),
-                NavigationDestination(icon: Icon(Icons.shopping_cart_rounded), label: 'Compras'),
+                NavigationDestination(
+                    icon: Icon(Icons.kitchen_rounded), label: 'Produtos'),
+                NavigationDestination(
+                    icon: Icon(Icons.filter_alt_rounded), label: 'Filtros'),
+                NavigationDestination(
+                    icon: Icon(Icons.shopping_cart_rounded), label: 'Compras'),
               ],
             ),
           ),
@@ -224,7 +260,7 @@ class _ProductsTab extends ConsumerWidget {
                       Icon(Icons.eco, color: Color(0xFF44A169), size: 28),
                       SizedBox(width: 6),
                       Text(
-                        'SmartFridge',
+                        'SmartHouse',
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.w800,
@@ -308,12 +344,15 @@ class _ProductsTab extends ConsumerWidget {
                 ),
               ),
             ),
-            const Text('Ordenar: ', style: TextStyle(color: Color(0xFF4D545F), fontSize: 18)),
+            const Text('Ordenar: ',
+                style: TextStyle(color: Color(0xFF4D545F), fontSize: 18)),
             PopupMenuButton<_ProductSortOption>(
               tooltip: 'Ordenar produtos',
               initialValue: sort,
-              onSelected: (selected) => ref.read(_productSortProvider.notifier).state = selected,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              onSelected: (selected) =>
+                  ref.read(_productSortProvider.notifier).state = selected,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
               itemBuilder: (_) => const [
                 PopupMenuItem(
                   value: _ProductSortOption.mostRecent,
@@ -339,7 +378,8 @@ class _ProductsTab extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: 4),
-                  const Icon(Icons.expand_more_rounded, color: Color(0xFF5F6873), size: 24),
+                  const Icon(Icons.expand_more_rounded,
+                      color: Color(0xFF5F6873), size: 24),
                 ],
               ),
             ),
@@ -349,179 +389,183 @@ class _ProductsTab extends ConsumerWidget {
         products.when(
           data: (list) {
             final sorted = [...list]..sort((a, b) {
-              if (sort == _ProductSortOption.expirationSoonest) {
-                final da = DateTime.tryParse(a.expirationDate) ?? DateTime(9999);
-                final db = DateTime.tryParse(b.expirationDate) ?? DateTime(9999);
-                return da.compareTo(db);
-              }
-              if (sort == _ProductSortOption.oldest) {
-                return a.id.compareTo(b.id);
-              }
-              return b.id.compareTo(a.id);
-            });
+                if (sort == _ProductSortOption.expirationSoonest) {
+                  final da =
+                      DateTime.tryParse(a.expirationDate) ?? DateTime(9999);
+                  final db =
+                      DateTime.tryParse(b.expirationDate) ?? DateTime(9999);
+                  return da.compareTo(db);
+                }
+                if (sort == _ProductSortOption.oldest) {
+                  return a.id.compareTo(b.id);
+                }
+                return b.id.compareTo(a.id);
+              });
 
             return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: sorted
-                .map(
-                  (p) => Container(
-                    margin: const EdgeInsets.only(bottom: 14),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0x12000000),
-                          blurRadius: 18,
-                          offset: Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 86,
-                          height: 86,
-                          decoration: BoxDecoration(
-                            color: _cardTint(p.status),
-                            borderRadius: BorderRadius.circular(43),
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: sorted
+                  .map(
+                    (p) => Container(
+                      margin: const EdgeInsets.only(bottom: 14),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x12000000),
+                            blurRadius: 18,
+                            offset: Offset(0, 5),
                           ),
-                          child: Icon(
-                            _productIcon(p.name),
-                            size: 42,
-                            color: statusDotColor(p.status),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 86,
+                            height: 86,
+                            decoration: BoxDecoration(
+                              color: _cardTint(p.status),
+                              borderRadius: BorderRadius.circular(43),
+                            ),
+                            child: Icon(
+                              _productIcon(p.name),
+                              size: 42,
+                              color: statusDotColor(p.status),
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                p.name,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w800,
-                                  color: Color(0xFF102E28),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  p.name,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w800,
+                                    color: Color(0xFF102E28),
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 6),
-                              RichText(
-                                text: TextSpan(
-                                  style: const TextStyle(fontSize: 14),
+                                const SizedBox(height: 6),
+                                RichText(
+                                  text: TextSpan(
+                                    style: const TextStyle(fontSize: 14),
+                                    children: [
+                                      const TextSpan(
+                                        text: 'Qtd: ',
+                                        style: TextStyle(
+                                          color: Color(0xFF6A7380),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: '${p.quantity}',
+                                        style: const TextStyle(
+                                          color: Color(0xFF4B5561),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      const TextSpan(
+                                        text: '  •  Validade: ',
+                                        style: TextStyle(
+                                          color: Color(0xFF6A7380),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: _formatDate(p.expirationDate),
+                                        style: TextStyle(
+                                          color: statusDotColor(p.status),
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: _statusBg(p.status),
+                                  borderRadius: BorderRadius.circular(999),
+                                ),
+                                child: Row(
                                   children: [
-                                    const TextSpan(
-                                      text: 'Qtd: ',
-                                      style: TextStyle(
-                                        color: Color(0xFF6A7380),
-                                        fontWeight: FontWeight.w600,
+                                    Container(
+                                      width: 12,
+                                      height: 12,
+                                      decoration: BoxDecoration(
+                                        color: statusDotColor(p.status),
+                                        shape: BoxShape.circle,
                                       ),
                                     ),
-                                    TextSpan(
-                                      text: '${p.quantity}',
-                                      style: const TextStyle(
-                                        color: Color(0xFF4B5561),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    const TextSpan(
-                                      text: '  •  Validade: ',
-                                      style: TextStyle(
-                                        color: Color(0xFF6A7380),
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: _formatDate(p.expirationDate),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      _statusLabel(p.status),
                                       style: TextStyle(
                                         color: statusDotColor(p.status),
                                         fontWeight: FontWeight.w700,
+                                        fontSize: 16,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Column(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                              decoration: BoxDecoration(
-                                color: _statusBg(p.status),
-                                borderRadius: BorderRadius.circular(999),
-                              ),
-                              child: Row(
+                              const SizedBox(height: 10),
+                              Row(
                                 children: [
-                                  Container(
-                                    width: 12,
-                                    height: 12,
-                                    decoration: BoxDecoration(
-                                      color: statusDotColor(p.status),
-                                      shape: BoxShape.circle,
+                                  IconButton(
+                                    tooltip: 'Editar produto',
+                                    icon: const Icon(
+                                      Icons.edit_outlined,
+                                      color: Color(0xFF5E6874),
                                     ),
+                                    onPressed: () async {
+                                      final changed = await context.push<bool>(
+                                        '/product/edit',
+                                        extra: p,
+                                      );
+                                      if (changed == true) {
+                                        ref.invalidate(productListProvider);
+                                        ref.invalidate(dashboardProvider);
+                                        ref.invalidate(expiredProductsProvider);
+                                        ref.invalidate(
+                                            nearExpirationProductsProvider);
+                                      }
+                                    },
                                   ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    _statusLabel(p.status),
-                                    style: TextStyle(
-                                      color: statusDotColor(p.status),
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 16,
+                                  IconButton(
+                                    tooltip: 'Excluir produto',
+                                    icon: const Icon(
+                                      Icons.delete_outline,
+                                      color: Color(0xFFB3393F),
+                                    ),
+                                    onPressed: () => _deleteProduct(
+                                      context,
+                                      ref,
+                                      productRepository,
+                                      p,
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                IconButton(
-                                  tooltip: 'Editar produto',
-                                  icon: const Icon(
-                                    Icons.edit_outlined,
-                                    color: Color(0xFF5E6874),
-                                  ),
-                                  onPressed: () async {
-                                    final changed = await context.push<bool>(
-                                      '/product/edit',
-                                      extra: p,
-                                    );
-                                    if (changed == true) {
-                                      ref.invalidate(productListProvider);
-                                      ref.invalidate(dashboardProvider);
-                                      ref.invalidate(expiredProductsProvider);
-                                      ref.invalidate(nearExpirationProductsProvider);
-                                    }
-                                  },
-                                ),
-                                IconButton(
-                                  tooltip: 'Excluir produto',
-                                  icon: const Icon(
-                                    Icons.delete_outline,
-                                    color: Color(0xFFB3393F),
-                                  ),
-                                  onPressed: () => _deleteProduct(
-                                    context,
-                                    ref,
-                                    productRepository,
-                                    p,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      ],
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                )
-                    .toList(),
-                  );
-                  },
+                  )
+                  .toList(),
+            );
+          },
           loading: () => const Padding(
             padding: EdgeInsets.symmetric(vertical: 26),
             child: Center(child: CircularProgressIndicator()),
@@ -546,6 +590,12 @@ class _IconActionButton extends ConsumerWidget {
   }
 
   String _notificationLabel(NotificationItem item) {
+    if (item.sourceModule == 'AGENDA') {
+      return item.type == 'EXPIRED' ? 'Evento atrasado' : 'Evento proximo';
+    }
+    if (item.sourceModule == 'HOUSE_BILL') {
+      return item.type == 'EXPIRED' ? 'Conta vencida' : 'Conta a vencer';
+    }
     if (item.type == 'EXPIRED') {
       return 'Produto vencido';
     }
@@ -553,6 +603,18 @@ class _IconActionButton extends ConsumerWidget {
       return 'Próximo do vencimento';
     }
     return 'Notificação';
+  }
+
+  IconData _notificationIcon(NotificationItem item) {
+    if (item.sourceModule == 'AGENDA') {
+      return Icons.event_note_outlined;
+    }
+    if (item.sourceModule == 'HOUSE_BILL') {
+      return Icons.receipt_long_outlined;
+    }
+    return item.type == 'EXPIRED'
+        ? Icons.error_outline
+        : Icons.schedule_rounded;
   }
 
   Future<void> _openNotifications(BuildContext context, WidgetRef ref) async {
@@ -581,13 +643,15 @@ class _IconActionButton extends ConsumerWidget {
                       children: [
                         const Text(
                           'Notificações',
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.w800),
                         ),
                         const SizedBox(height: 12),
                         Expanded(
                           child: ListView.separated(
                             itemCount: items.length,
-                            separatorBuilder: (_, __) => const SizedBox(height: 8),
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(height: 8),
                             itemBuilder: (_, index) {
                               final item = items[index];
                               return ListTile(
@@ -595,15 +659,11 @@ class _IconActionButton extends ConsumerWidget {
                                   borderRadius: BorderRadius.circular(14),
                                 ),
                                 tileColor: Colors.white,
-                                title: Text(item.productName),
+                                title: Text(item.displayLabel),
                                 subtitle: Text(
                                   '${_notificationLabel(item)} • Validade ${_formatDate(item.productExpirationDate)}',
                                 ),
-                                leading: Icon(
-                                  item.type == 'EXPIRED'
-                                      ? Icons.error_outline
-                                      : Icons.schedule_rounded,
-                                ),
+                                leading: Icon(_notificationIcon(item)),
                               );
                             },
                           ),
@@ -611,7 +671,8 @@ class _IconActionButton extends ConsumerWidget {
                       ],
                     );
                   },
-                  loading: () => const Center(child: CircularProgressIndicator()),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
                   error: (e, _) => Center(child: Text(formatApiError(e))),
                 ),
               );
@@ -651,7 +712,8 @@ class _IconActionButton extends ConsumerWidget {
           child: Stack(
             children: [
               const Center(
-                child: Icon(Icons.notifications_none_rounded, color: Color(0xFF1A3931), size: 33),
+                child: Icon(Icons.notifications_none_rounded,
+                    color: Color(0xFF1A3931), size: 33),
               ),
               if (hasNotification)
                 Positioned(
@@ -735,7 +797,8 @@ class _StatCard extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               value,
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800, color: valueColor),
+              style: TextStyle(
+                  fontSize: 30, fontWeight: FontWeight.w800, color: valueColor),
             ),
           ),
         ],
@@ -780,7 +843,10 @@ class _FiltersTab extends ConsumerWidget {
       children: [
         const Text(
           'Filtros',
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800, color: Color(0xFF0F2F28)),
+          style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.w800,
+              color: Color(0xFF0F2F28)),
         ),
         const SizedBox(height: 14),
         Container(
@@ -790,7 +856,8 @@ class _FiltersTab extends ConsumerWidget {
             borderRadius: BorderRadius.circular(18),
           ),
           child: expired.when(
-            data: (list) => Text('Vencidos: ${list.length}', style: const TextStyle(fontSize: 18)),
+            data: (list) => Text('Vencidos: ${list.length}',
+                style: const TextStyle(fontSize: 18)),
             loading: () => const LinearProgressIndicator(),
             error: (e, _) => Text('Erro: $e'),
           ),
@@ -803,7 +870,8 @@ class _FiltersTab extends ConsumerWidget {
             borderRadius: BorderRadius.circular(18),
           ),
           child: near.when(
-            data: (list) => Text('Próximos a vencer: ${list.length}', style: const TextStyle(fontSize: 18)),
+            data: (list) => Text('Próximos a vencer: ${list.length}',
+                style: const TextStyle(fontSize: 18)),
             loading: () => const LinearProgressIndicator(),
             error: (e, _) => Text('Erro: $e'),
           ),
@@ -998,14 +1066,18 @@ class _ShoppingTab extends ConsumerWidget {
         children: [
           const Text(
             'Compras',
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800, color: Color(0xFF0F2F28)),
+            style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.w800,
+                color: Color(0xFF0F2F28)),
           ),
           const SizedBox(height: 14),
           ...items.map(
             (item) => Card(
               color: Colors.white,
               elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18)),
               margin: const EdgeInsets.only(bottom: 10),
               child: ListTile(
                 leading: Checkbox(

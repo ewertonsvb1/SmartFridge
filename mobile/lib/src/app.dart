@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smartfridge_mobile/src/core/auth/auth_session.dart';
+import 'package:smartfridge_mobile/src/features/agenda/data/agenda_repository.dart';
+import 'package:smartfridge_mobile/src/features/agenda/presentation/agenda_form_page.dart';
+import 'package:smartfridge_mobile/src/features/agenda/presentation/agenda_page.dart';
 import 'package:smartfridge_mobile/src/features/auth/presentation/login_page.dart';
 import 'package:smartfridge_mobile/src/features/auth/presentation/register_page.dart';
+import 'package:smartfridge_mobile/src/features/home/presentation/home_hub_page.dart';
 import 'package:smartfridge_mobile/src/features/home/presentation/home_page.dart';
 import 'package:smartfridge_mobile/src/features/product/data/product_repository.dart';
 import 'package:smartfridge_mobile/src/features/product/presentation/product_form_page.dart';
@@ -36,8 +40,26 @@ final _routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/splash', builder: (_, __) => const _SplashPage()),
       GoRoute(path: '/login', builder: (_, __) => const LoginPage()),
       GoRoute(path: '/register', builder: (_, __) => const RegisterPage()),
-      GoRoute(path: '/home', builder: (_, __) => const HomePage()),
-      GoRoute(path: '/product/new', builder: (_, __) => const ProductFormPage()),
+      GoRoute(path: '/home', builder: (_, __) => const HomeHubPage()),
+      GoRoute(path: '/agenda', builder: (_, __) => const AgendaPage()),
+      GoRoute(
+        path: '/agenda/new',
+        builder: (_, state) =>
+            AgendaFormPage(initialDate: state.extra as DateTime?),
+      ),
+      GoRoute(
+        path: '/agenda/edit',
+        builder: (_, state) {
+          final event = state.extra as AgendaEventModel?;
+          if (event == null) {
+            return const _InvalidAgendaRoutePage();
+          }
+          return AgendaFormPage(initialEvent: event);
+        },
+      ),
+      GoRoute(path: '/fridge', builder: (_, __) => const HomePage()),
+      GoRoute(
+          path: '/product/new', builder: (_, __) => const ProductFormPage()),
       GoRoute(
         path: '/product/edit',
         builder: (_, state) {
@@ -51,6 +73,20 @@ final _routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
+
+class _InvalidAgendaRoutePage extends StatelessWidget {
+  const _InvalidAgendaRoutePage();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Erro')),
+      body: const Center(
+        child: Text('Evento invalido para edicao.'),
+      ),
+    );
+  }
+}
 
 class _InvalidProductRoutePage extends StatelessWidget {
   const _InvalidProductRoutePage();
@@ -77,15 +113,15 @@ class _SplashPage extends StatelessWidget {
   }
 }
 
-class SmartFridgeApp extends ConsumerWidget {
-  const SmartFridgeApp({super.key});
+class SmartHouseApp extends ConsumerWidget {
+  const SmartHouseApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(_routerProvider);
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: 'SmartFridge',
+      title: 'SmartHouse',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0E7C7B)),
         useMaterial3: true,

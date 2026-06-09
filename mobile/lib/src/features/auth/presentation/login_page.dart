@@ -44,7 +44,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('SmartFridge', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                const Text('SmartHouse', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 24),
                 TextField(controller: _emailController, decoration: const InputDecoration(labelText: 'Email')),
                 const SizedBox(height: 12),

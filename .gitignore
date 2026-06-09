@@ -4,4 +4,12 @@
 **/build/
 **/.dart_tool/
 backend/target/
-"@ | Add-Content "F:\Projetos\Geladeira\.gitignore"
+
+# Desenvolvimento Assistido por IA
+AGENTS.md
+HOW_TO_USE.md
+/docs/
+/context/
+/specs/
+/tasks/
+/prompts/
