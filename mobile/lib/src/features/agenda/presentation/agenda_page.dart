@@ -24,6 +24,15 @@ String _monthLabel(DateTime month) {
   return '${monthNames[month.month - 1]} ${month.year}';
 }
 
+DateTime _dateOnly(DateTime dateTime) {
+  return DateTime(dateTime.year, dateTime.month, dateTime.day);
+}
+
+String _dateKey(DateTime dateTime) {
+  final date = _dateOnly(dateTime);
+  return DateFormat('yyyy-MM-dd').format(date);
+}
+
 class AgendaPage extends ConsumerWidget {
   const AgendaPage({super.key});
 
@@ -119,10 +128,11 @@ class AgendaPage extends ConsumerWidget {
                         }
                       },
                       onSelectDate: (date) {
+                        final selected = _dateOnly(date);
                         ref.read(agendaSelectedDateProvider.notifier).state =
-                            date;
+                            selected;
                         ref.read(agendaVisibleMonthProvider.notifier).state =
-                            DateTime(date.year, date.month);
+                            DateTime(selected.year, selected.month);
                       },
                     );
                   },
@@ -223,6 +233,7 @@ class _CalendarSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const weekdayLabels = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'];
     final firstDay = DateTime(visibleMonth.year, visibleMonth.month, 1);
     final daysInMonth =
         DateTime(visibleMonth.year, visibleMonth.month + 1, 0).day;
@@ -230,11 +241,25 @@ class _CalendarSection extends StatelessWidget {
     final totalSlots = ((leadingDays + daysInMonth + 6) ~/ 7) * 7;
     final today = DateTime.now();
     final eventsPerDay = <String, int>{};
+    final monthDates = List<DateTime?>.generate(totalSlots, (index) {
+      if (index < leadingDays || index >= leadingDays + daysInMonth) {
+        return null;
+      }
+      final day = index - leadingDays + 1;
+      return DateTime(visibleMonth.year, visibleMonth.month, day);
+    });
+    final weeks = <List<DateTime?>>[];
 
     for (final event in events) {
-      final key = DateFormat('yyyy-MM-dd').format(event.startAt);
+      final key = _dateKey(event.startAt);
       eventsPerDay.update(key, (value) => value + 1, ifAbsent: () => 1);
     }
+
+    for (var index = 0; index < monthDates.length; index += 7) {
+      weeks.add(monthDates.sublist(index, index + 7));
+    }
+
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
       children: [
@@ -260,51 +285,54 @@ class _CalendarSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
-        const Row(
-          children: [
-            _WeekdayLabel('S'),
-            _WeekdayLabel('T'),
-            _WeekdayLabel('Q'),
-            _WeekdayLabel('Q'),
-            _WeekdayLabel('S'),
-            _WeekdayLabel('S'),
-            _WeekdayLabel('D'),
-          ],
-        ),
-        const SizedBox(height: 8),
-        GridView.builder(
-          itemCount: totalSlots,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 7,
-            mainAxisSpacing: 8,
-            crossAxisSpacing: 8,
-            childAspectRatio: 0.84,
-          ),
-          itemBuilder: (context, index) {
-            if (index < leadingDays || index >= leadingDays + daysInMonth) {
-              return const SizedBox.shrink();
-            }
+        const SizedBox(height: 12),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final compact = constraints.maxWidth < 760;
+            final cellHeight = compact ? 82.0 : 104.0;
 
-            final day = index - leadingDays + 1;
-            final date = DateTime(visibleMonth.year, visibleMonth.month, day);
-            final key = DateFormat('yyyy-MM-dd').format(date);
-            final isSelected = selectedDate.year == date.year &&
-                selectedDate.month == date.month &&
-                selectedDate.day == date.day;
-            final isToday = today.year == date.year &&
-                today.month == date.month &&
-                today.day == date.day;
-            final eventCount = eventsPerDay[key] ?? 0;
-
-            return _CalendarDayCell(
-              day: day,
-              eventCount: eventCount,
-              isSelected: isSelected,
-              isToday: isToday,
-              onTap: () => onSelectDate(date),
+            return Container(
+              decoration: BoxDecoration(
+                color: colorScheme.surface,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.95),
+                ),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x0C000000),
+                    blurRadius: 10,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        for (var index = 0;
+                            index < weekdayLabels.length;
+                            index++)
+                          _WeekdayLabel(
+                            label: weekdayLabels[index],
+                            isFirstColumn: index == 0,
+                          ),
+                      ],
+                    ),
+                    for (var row = 0; row < weeks.length; row++)
+                      _CalendarWeekRow(
+                        dates: weeks[row],
+                        cellHeight: cellHeight,
+                        today: today,
+                        selectedDate: selectedDate,
+                        eventsPerDay: eventsPerDay,
+                        onSelectDate: onSelectDate,
+                      ),
+                  ],
+                ),
+              ),
             );
           },
         ),
@@ -314,90 +342,259 @@ class _CalendarSection extends StatelessWidget {
 }
 
 class _WeekdayLabel extends StatelessWidget {
-  const _WeekdayLabel(this.label);
+  const _WeekdayLabel({
+    required this.label,
+    required this.isFirstColumn,
+  });
 
   final String label;
+  final bool isFirstColumn;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Expanded(
-      child: Text(
-        label,
-        textAlign: TextAlign.center,
-        style: const TextStyle(
-          fontWeight: FontWeight.w700,
-          color: Color(0xFF6B7280),
+      child: Container(
+        height: 40,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+          border: Border(
+            left: isFirstColumn
+                ? BorderSide(
+                    color: colorScheme.outlineVariant.withValues(alpha: 0.95),
+                  )
+                : BorderSide.none,
+            right: BorderSide(
+              color: colorScheme.outlineVariant.withValues(alpha: 0.95),
+            ),
+            bottom: BorderSide(
+              color: colorScheme.outlineVariant.withValues(alpha: 0.95),
+            ),
+          ),
+        ),
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            color: colorScheme.onSurfaceVariant,
+          ),
         ),
       ),
     );
   }
 }
 
-class _CalendarDayCell extends StatelessWidget {
-  const _CalendarDayCell({
-    required this.day,
-    required this.eventCount,
-    required this.isSelected,
-    required this.isToday,
-    required this.onTap,
+class _CalendarWeekRow extends StatelessWidget {
+  const _CalendarWeekRow({
+    required this.dates,
+    required this.cellHeight,
+    required this.today,
+    required this.selectedDate,
+    required this.eventsPerDay,
+    required this.onSelectDate,
   });
 
-  final int day;
-  final int eventCount;
-  final bool isSelected;
-  final bool isToday;
-  final VoidCallback onTap;
+  final List<DateTime?> dates;
+  final double cellHeight;
+  final DateTime today;
+  final DateTime selectedDate;
+  final Map<String, int> eventsPerDay;
+  final ValueChanged<DateTime> onSelectDate;
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = isSelected
-        ? const Color(0xFF0E7C7B)
-        : isToday
-            ? const Color(0xFFE7F7F6)
-            : const Color(0xFFF7F8FC);
-    final foregroundColor = isSelected ? Colors.white : const Color(0xFF17352E);
+    return Row(
+      children: [
+        for (var column = 0; column < dates.length; column++)
+          _CalendarDayCell(
+            date: dates[column],
+            eventCount: dates[column] == null
+                ? 0
+                : eventsPerDay[_dateKey(dates[column]!)] ?? 0,
+            isSelected: dates[column] != null &&
+                selectedDate.year == dates[column]!.year &&
+                selectedDate.month == dates[column]!.month &&
+                selectedDate.day == dates[column]!.day,
+            isToday: dates[column] != null &&
+                today.year == dates[column]!.year &&
+                today.month == dates[column]!.month &&
+                today.day == dates[column]!.day,
+            isFirstColumn: column == 0,
+            height: cellHeight,
+            onTap: dates[column] == null
+                ? null
+                : () => onSelectDate(dates[column]!),
+          ),
+      ],
+    );
+  }
+}
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
-      child: Ink(
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '$day',
-                style: TextStyle(
-                  color: foregroundColor,
-                  fontWeight: FontWeight.w800,
-                ),
+class _CalendarDayCell extends StatelessWidget {
+  const _CalendarDayCell({
+    required this.date,
+    required this.eventCount,
+    required this.isSelected,
+    required this.isToday,
+    required this.isFirstColumn,
+    required this.height,
+    required this.onTap,
+  });
+
+  final DateTime? date;
+  final int eventCount;
+  final bool isSelected;
+  final bool isToday;
+  final bool isFirstColumn;
+  final double height;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isOutsideMonth = date == null;
+    final hasEvent = eventCount > 0;
+    final cellFill = isOutsideMonth
+        ? colorScheme.surfaceContainerHighest.withValues(
+            alpha: isDark ? 0.28 : 0.5,
+          )
+        : isSelected
+            ? colorScheme.primary.withValues(alpha: isDark ? 0.28 : 0.18)
+            : hasEvent
+                ? colorScheme.primaryContainer.withValues(
+                    alpha: isDark ? 0.5 : 0.75,
+                  )
+                : colorScheme.surface;
+    final borderColor = colorScheme.outlineVariant.withValues(
+      alpha: isDark ? 0.95 : 1,
+    );
+    final dayTextColor = isOutsideMonth
+        ? colorScheme.onSurfaceVariant.withValues(alpha: 0.45)
+        : isSelected
+            ? colorScheme.primary
+            : colorScheme.onSurface;
+    final eventBandColor = isSelected
+        ? colorScheme.primary.withValues(alpha: isDark ? 0.38 : 0.22)
+        : colorScheme.primary.withValues(alpha: isDark ? 0.34 : 0.16);
+    final eventTextColor =
+        isSelected ? colorScheme.primary : colorScheme.onPrimaryContainer;
+
+    return Expanded(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          child: Container(
+            key: ValueKey(
+              'agenda-day-${date == null ? 'outside' : _dateKey(date!)}',
+            ),
+            height: height,
+            decoration: BoxDecoration(
+              color: cellFill,
+              border: Border(
+                left: isFirstColumn
+                    ? BorderSide(color: borderColor, width: 1)
+                    : BorderSide.none,
+                right: BorderSide(color: borderColor, width: 1),
+                bottom: BorderSide(color: borderColor, width: 1),
+                top: BorderSide.none,
               ),
-              if (eventCount > 0)
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                  decoration: BoxDecoration(
-                    color:
-                        isSelected ? Colors.white24 : const Color(0xFFDCEFEB),
-                    borderRadius: BorderRadius.circular(999),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        date == null ? '' : '${date!.day}',
+                        style: TextStyle(
+                          color: dayTextColor,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const Spacer(),
+                      if (hasEvent)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 7,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: eventBandColor,
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: Text(
+                            eventCount == 1 ? '1' : '$eventCount',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w800,
+                              color: eventTextColor,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
-                  child: Text(
-                    eventCount == 1 ? '1 evento' : '$eventCount eventos',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                      color: foregroundColor,
+                  const Spacer(),
+                  if (hasEvent)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: eventBandColor,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: colorScheme.primary.withValues(
+                            alpha: isDark ? 0.5 : 0.22,
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.event_rounded,
+                            size: 13,
+                            color: eventTextColor,
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              eventCount == 1
+                                  ? '1 evento'
+                                  : '$eventCount eventos',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w800,
+                                color: eventTextColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else if (isToday)
+                    Container(
+                      width: 18,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: colorScheme.primary.withValues(alpha: 0.35),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
                     ),
-                  ),
-                )
-              else
-                const SizedBox(height: 20),
-            ],
+                ],
+              ),
+            ),
           ),
         ),
       ),

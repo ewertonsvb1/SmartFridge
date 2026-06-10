@@ -82,8 +82,8 @@ flutter run
 
 Base URL atual no app:
 
-- Android Emulator: http://10.0.2.2:8081
-- Web/Windows/Linux/macOS: http://localhost:8081
+- Android Emulator: http://10.0.2.2:8080
+- Web/Windows/Linux/macOS: http://localhost:8080
 
 Override opcional da URL da API ao rodar o app:
 
@@ -213,8 +213,36 @@ Quando o backend roda com profile `dev`, uma conta padrao e criada automaticamen
 
 ### Windows (PowerShell)
 
+Use o script unico de inicializacao:
+
+###########
+###LIGAR###
+###########
 ```powershell
-cd backend; Start-Process cmd -ArgumentList "/k mvn spring-boot:run"; cd ../mobile; flutter pub get; flutter run
+powershell -ExecutionPolicy Bypass -File .\scripts\start_smarthouse_web.ps1 -ForceRestart
+```
+
+Ele:
+
+- executa `flutter pub get`
+- sobe o backend Spring Boot em `http://127.0.0.1:8080`
+- sobe o Flutter Web em `http://127.0.0.1:3000`
+- abre o app no Chrome automaticamente
+
+Se preferir nao abrir o navegador:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\start_smarthouse_web.ps1 -ForceRestart -NoChrome
+```
+
+Os logs ficam em `scripts/logs/`.
+
+Para encerrar backend e Flutter Web com um unico comando:
+###########
+###DESLIGAR###
+###########
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\stop_smarthouse_web.ps1
 ```
 
 ### Linux/macOS/Git Bash

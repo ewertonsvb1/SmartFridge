@@ -9,6 +9,9 @@ import 'package:smartfridge_mobile/src/features/auth/presentation/login_page.dar
 import 'package:smartfridge_mobile/src/features/auth/presentation/register_page.dart';
 import 'package:smartfridge_mobile/src/features/home/presentation/home_hub_page.dart';
 import 'package:smartfridge_mobile/src/features/home/presentation/home_page.dart';
+import 'package:smartfridge_mobile/src/features/house_bills/data/house_bills_repository.dart';
+import 'package:smartfridge_mobile/src/features/house_bills/presentation/house_bill_form_page.dart';
+import 'package:smartfridge_mobile/src/features/house_bills/presentation/house_bills_page.dart';
 import 'package:smartfridge_mobile/src/features/product/data/product_repository.dart';
 import 'package:smartfridge_mobile/src/features/product/presentation/product_form_page.dart';
 
@@ -41,6 +44,21 @@ final _routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/login', builder: (_, __) => const LoginPage()),
       GoRoute(path: '/register', builder: (_, __) => const RegisterPage()),
       GoRoute(path: '/home', builder: (_, __) => const HomeHubPage()),
+      GoRoute(path: '/house-bills', builder: (_, __) => const HouseBillsPage()),
+      GoRoute(
+        path: '/house-bills/new',
+        builder: (_, __) => const HouseBillFormPage(),
+      ),
+      GoRoute(
+        path: '/house-bills/edit',
+        builder: (_, state) {
+          final bill = state.extra as HouseBillModel?;
+          if (bill == null) {
+            return const _InvalidHouseBillRoutePage();
+          }
+          return HouseBillFormPage(initialBill: bill);
+        },
+      ),
       GoRoute(path: '/agenda', builder: (_, __) => const AgendaPage()),
       GoRoute(
         path: '/agenda/new',
@@ -83,6 +101,20 @@ class _InvalidAgendaRoutePage extends StatelessWidget {
       appBar: AppBar(title: const Text('Erro')),
       body: const Center(
         child: Text('Evento invalido para edicao.'),
+      ),
+    );
+  }
+}
+
+class _InvalidHouseBillRoutePage extends StatelessWidget {
+  const _InvalidHouseBillRoutePage();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Erro')),
+      body: const Center(
+        child: Text('Conta invalida para edicao.'),
       ),
     );
   }

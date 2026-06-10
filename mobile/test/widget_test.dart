@@ -100,6 +100,60 @@ void main() {
     expect(find.text('SmartHouse'), findsWidgets);
     expect(find.text('Geladeira'), findsOneWidget);
   });
+
+  testWidgets(
+      'SmartHouseApp should refresh fridge count on home hub after creating a product',
+      (WidgetTester tester) async {
+    final api = _FridgeCountsApiMock();
+    _setLargeViewport(tester);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          tokenStorageProvider.overrideWithValue(_FakeTokenStorage()),
+          dioProvider.overrideWithValue(api.buildDio()),
+        ],
+        child: const SmartHouseApp(),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('0 itens, 0 vencidos e 0 proximos do vencimento'),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Abrir').first);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextFormField).at(0), 'Iogurte');
+    await tester.enterText(find.byType(TextFormField).at(1), '2');
+
+    final manufactureField =
+        tester.widget<TextFormField>(find.byType(TextFormField).at(2));
+    manufactureField.controller!.text = '2026-06-01';
+
+    final expirationField =
+        tester.widget<TextFormField>(find.byType(TextFormField).at(3));
+    expirationField.controller!.text = '2026-06-30';
+
+    await tester.pump();
+    await tester.tap(find.widgetWithText(FilledButton, 'Salvar'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Voltar ao inicio').first);
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('1 itens, 0 vencidos e 0 proximos do vencimento'),
+      findsOneWidget,
+    );
+  });
+
 }
 
 class _FakeTokenStorage implements TokenStorage {
@@ -111,6 +165,13 @@ class _FakeTokenStorage implements TokenStorage {
 
   @override
   Future<void> writeToken(String token) async {}
+}
+
+void _setLargeViewport(WidgetTester tester) {
+  tester.view.physicalSize = const Size(1200, 2200);
+  tester.view.devicePixelRatio = 1.0;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
 }
 
 Dio _buildMockDio() {
@@ -193,4 +254,142 @@ Dio _buildMockDio() {
     ),
   );
   return dio;
+}
+
+class _FridgeCountsApiMock {
+  int _nextId = 1;
+  final List<Map<String, dynamic>> _products = [];
+
+  Dio buildDio() {
+    final dio = Dio();
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          final method = options.method.toUpperCase();
+
+          if (options.path == '/dashboard') {
+            handler.resolve(
+              Response(
+                requestOptions: options,
+                data: _buildGlobalDashboard(),
+              ),
+            );
+            return;
+          }
+
+          if (options.path == '/products/dashboard') {
+            handler.resolve(
+              Response(
+                requestOptions: options,
+                data: _buildProductDashboard(),
+              ),
+            );
+            return;
+          }
+
+          if (options.path == '/products' && method == 'GET') {
+            handler.resolve(
+              Response(
+                requestOptions: options,
+                data: {
+                  'content': _products.reversed
+                      .map((product) => Map<String, dynamic>.from(product))
+                      .toList(),
+                },
+              ),
+            );
+            return;
+          }
+
+          if (options.path == '/products' && method == 'POST') {
+            final data = Map<String, dynamic>.from(options.data as Map);
+            _products.add({
+              'id': _nextId++,
+              'name': data['name'] as String? ?? '',
+              'quantity': data['quantity'] as int? ?? 0,
+              'manufactureDate': data['manufactureDate'] as String? ?? '',
+              'expirationDate': data['expirationDate'] as String? ?? '',
+              'status': _statusFor(data['expirationDate'] as String? ?? ''),
+            });
+            handler.resolve(
+              Response(
+                requestOptions: options,
+                data: _products.last,
+              ),
+            );
+            return;
+          }
+
+          if (options.path == '/shopping-list' ||
+              options.path == '/notifications' ||
+              options.path == '/agenda/events' ||
+              options.path == '/house-bills') {
+            handler.resolve(
+              Response(
+                requestOptions: options,
+                data: <Map<String, dynamic>>[],
+              ),
+            );
+            return;
+          }
+
+          handler.reject(
+            DioException(
+              requestOptions: options,
+              error: 'Unexpected path: ${options.path}',
+            ),
+          );
+        },
+      ),
+    );
+    return dio;
+  }
+
+  Map<String, dynamic> _buildGlobalDashboard() {
+    final dashboard = _buildProductDashboard();
+    return {
+      'fridge': dashboard,
+      'agenda': {
+        'implemented': true,
+        'total': 0,
+        'today': 0,
+        'upcoming': 0,
+      },
+      'houseBills': {
+        'implemented': true,
+        'totalOpen': 0,
+        'overdue': 0,
+        'paid': 0,
+      },
+    };
+  }
+
+  Map<String, dynamic> _buildProductDashboard() {
+    final expired =
+        _products.where((product) => product['status'] == 'EXPIRED').length;
+    final nearExpiration = _products
+        .where((product) => product['status'] == 'NEAR_EXPIRATION')
+        .length;
+
+    return {
+      'total': _products.length,
+      'expired': expired,
+      'nearExpiration': nearExpiration,
+    };
+  }
+
+  String _statusFor(String expirationDate) {
+    final expiration = DateTime.parse('${expirationDate}T00:00:00');
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final threshold = today.add(const Duration(days: 3));
+
+    if (expiration.isBefore(today)) {
+      return 'EXPIRED';
+    }
+    if (!expiration.isAfter(threshold)) {
+      return 'NEAR_EXPIRATION';
+    }
+    return 'OK';
+  }
 }

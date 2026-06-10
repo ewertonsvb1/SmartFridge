@@ -80,7 +80,10 @@ class HomeHubPage extends ConsumerWidget {
                   ? const Color(0xFF935E0B)
                   : const Color(0xFF6B7280),
               backgroundColor: const Color(0xFFF8FAFC),
-              trailing: const _SoonBadge(),
+              trailing: FilledButton(
+                onPressed: () => context.push('/house-bills'),
+                child: const Text('Abrir'),
+              ),
             ),
             const SizedBox(height: 24),
             Container(
@@ -130,8 +133,11 @@ class HomeHubPage extends ConsumerWidget {
   }
 
   String _houseBillsSubtitle(HouseBillsDashboardModel? houseBills) {
-    if (houseBills == null || !houseBills.implemented) {
-      return 'Disponivel na proxima etapa da migracao';
+    if (houseBills == null) {
+      return 'Dashboard financeiro e lista de contas da casa';
+    }
+    if (!houseBills.implemented) {
+      return 'Dashboard financeiro e lista de contas da casa';
     }
     return '${houseBills.totalOpen} contas abertas e ${houseBills.overdue} vencidas';
   }
@@ -208,29 +214,6 @@ class _HubCard extends StatelessWidget {
           const SizedBox(width: 12),
           trailing,
         ],
-      ),
-    );
-  }
-}
-
-class _SoonBadge extends StatelessWidget {
-  const _SoonBadge();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE5E7EB),
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: const Text(
-        'Em breve',
-        style: TextStyle(
-          color: Color(0xFF4B5563),
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
-        ),
       ),
     );
   }

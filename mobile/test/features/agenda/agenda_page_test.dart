@@ -105,12 +105,7 @@ void main() {
 
     expect(find.text('Reuniao semanal'), findsOneWidget);
 
-    await tester.scrollUntilVisible(
-      find.byKey(const ValueKey('agenda-event-card-2')),
-      250,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.tap(find.byKey(const ValueKey('agenda-event-card-2')));
+    await tester.tap(find.text('Reuniao semanal'));
     await tester.pumpAndSettle();
 
     await tester.enterText(
@@ -141,12 +136,7 @@ void main() {
     expect(find.text('Consulta medica'), findsNothing);
     expect(find.text('Reuniao semanal ajustada'), findsOneWidget);
 
-    await tester.scrollUntilVisible(
-      find.byKey(const ValueKey('agenda-event-card-2')),
-      250,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.tap(find.byKey(const ValueKey('agenda-event-card-2')));
+    await tester.tap(find.text('Reuniao semanal ajustada'));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byTooltip('Excluir evento'));
@@ -155,6 +145,45 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Reuniao semanal ajustada'), findsNothing);
+  });
+
+  testWidgets(
+      'SmartHouseApp should keep agenda events pinned to the correct calendar day',
+      (WidgetTester tester) async {
+    _setLargeViewport(tester);
+    final api = _AgendaApiMock();
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          tokenStorageProvider.overrideWithValue(_FakeTokenStorage()),
+          dioProvider.overrideWithValue(api.buildDio()),
+        ],
+        child: const SmartHouseApp(),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Abrir').at(1));
+    await tester.pumpAndSettle();
+
+    const eventDayKey = ValueKey('agenda-day-2026-06-12');
+
+    expect(find.byKey(eventDayKey), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(eventDayKey),
+        matching: find.text('1 evento'),
+      ),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.byKey(eventDayKey));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Evento visual 12/06'), findsOneWidget);
+    expect(find.text('Dia 12 com destaque'), findsOneWidget);
   });
 }
 
@@ -186,6 +215,16 @@ class _AgendaApiMock {
         description: 'Levar exames',
         startAt: DateTime(today.year, today.month, today.day, 9),
         endAt: DateTime(today.year, today.month, today.day, 10),
+        status: 'SCHEDULED',
+      ),
+    );
+    _events.add(
+      _eventPayload(
+        id: _nextId++,
+        title: 'Evento visual 12/06',
+        description: 'Dia 12 com destaque',
+        startAt: DateTime(2026, 6, 12, 14),
+        endAt: DateTime(2026, 6, 12, 15),
         status: 'SCHEDULED',
       ),
     );

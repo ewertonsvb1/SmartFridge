@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smartfridge_mobile/src/core/network/api_error.dart';
+import 'package:smartfridge_mobile/src/features/dashboard/presentation/dashboard_controller.dart';
 import 'package:smartfridge_mobile/src/features/product/data/product_repository.dart';
 import 'package:smartfridge_mobile/src/features/product/presentation/product_controller.dart';
 
@@ -211,6 +212,7 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                         ref.invalidate(dashboardProvider);
                         ref.invalidate(expiredProductsProvider);
                         ref.invalidate(nearExpirationProductsProvider);
+                        ref.invalidate(globalDashboardProvider);
 
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
