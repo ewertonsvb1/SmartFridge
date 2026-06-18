@@ -331,6 +331,12 @@ class _ProductsTab extends ConsumerWidget {
           ),
           error: (e, _) => Text('Erro dashboard: $e'),
         ),
+        const SizedBox(height: 18),
+        FilledButton.icon(
+          onPressed: () => context.push('/product/import'),
+          icon: const Icon(Icons.qr_code_scanner_rounded),
+          label: const Text('Importar NFC-e'),
+        ),
         const SizedBox(height: 28),
         Row(
           children: [

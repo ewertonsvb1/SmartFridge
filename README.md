@@ -91,6 +91,36 @@ Override opcional da URL da API ao rodar o app:
 flutter run --dart-define=API_BASE_URL=http://SEU_HOST:PORTA
 ```
 
+### Rodar no Android fisico
+
+Para aparelho Android real, o backend local precisa estar acessivel fora do emulador.
+
+Opcoes suportadas:
+
+1. Mesmo Wi-Fi:
+   - descubra o IP da sua maquina na rede local
+   - suba o backend em `http://0.0.0.0:8080` ou mantenha a porta acessivel na rede
+   - rode o app com:
+
+```bash
+flutter run --dart-define=API_BASE_URL=http://SEU_IP_LOCAL:8080
+```
+
+2. USB com `adb reverse`:
+   - conecte o Android com depuracao USB ativa
+   - execute:
+
+```bash
+adb reverse tcp:8080 tcp:8080
+flutter run --dart-define=API_BASE_URL=http://127.0.0.1:8080
+```
+
+Observacoes importantes:
+
+- `10.0.2.2` funciona apenas no Android Emulator
+- `localhost` no celular aponta para o proprio aparelho, nao para o seu PC
+- a leitura de QR Code no Android usa permissao de camera declarada no manifesto
+
 ### Configuração do App - Android
 
 1. **Nome do app**: Edite `mobile/android/app/src/main/res/values/strings.xml`
@@ -222,7 +252,6 @@ Use o script unico de inicializacao:
 powershell -ExecutionPolicy Bypass -File .\scripts\start_smarthouse_web.ps1 -ForceRestart
 ```
 
-Ele:
 
 - executa `flutter pub get`
 - sobe o backend Spring Boot em `http://127.0.0.1:8080`

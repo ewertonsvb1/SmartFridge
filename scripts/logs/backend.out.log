@@ -1,4 +1,4 @@
-[0.020s][warning][cds] This file is not the one used while building the shared archive file: 'C:\Users\ewertonesb\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\java\25\lib\modules', size has changed
+[0.026s][warning][cds] This file is not the one used while building the shared archive file: 'C:\Users\ewertonesb\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\java\25\lib\modules', size has changed
 [INFO] Scanning for projects...
 [INFO] 
 [INFO] ----------------------< com.smartfridge:backend >-----------------------
@@ -10,7 +10,7 @@
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ backend ---
 [INFO] Copying 3 resources from src\main\resources to target\classes
-[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] Copying 1 resource from src\main\resources to target\classes
 [INFO] 
 [INFO] --- compiler:3.13.0:compile (default-compile) @ backend ---
 [INFO] Nothing to compile - all classes are up to date.
@@ -27,7 +27,7 @@
 [INFO] --- spring-boot:3.3.4:run (default-cli) @ backend ---
 [INFO] Attaching agents: []
 Picked up JAVA_TOOL_OPTIONS: -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8
-[0.031s][warning][cds] This file is not the one used while building the shared archive file: 'C:\Users\ewertonesb\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\java\25\lib\modules', size has changed
+[0.021s][warning][cds] This file is not the one used while building the shared archive file: 'C:\Users\ewertonesb\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\java\25\lib\modules', size has changed
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -38,29 +38,29 @@ Picked up JAVA_TOOL_OPTIONS: -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8
 
  :: Spring Boot ::                (v3.3.4)
 
-2026-06-10T16:42:30.182-03:00  INFO 22464 --- [smartfridge-backend] [           main] c.s.backend.SmartFridgeApplication       : Starting SmartFridgeApplication using Java 25.0.2 with PID 22464 (F:\Projetos\Geladeira\backend\target\classes started by ewertonesb in F:\Projetos\Geladeira\backend)
-2026-06-10T16:42:30.186-03:00  INFO 22464 --- [smartfridge-backend] [           main] c.s.backend.SmartFridgeApplication       : The following 1 profile is active: "dev"
-2026-06-10T16:42:31.206-03:00  INFO 22464 --- [smartfridge-backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-06-10T16:42:31.291-03:00  INFO 22464 --- [smartfridge-backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 75 ms. Found 6 JPA repository interfaces.
+2026-06-18T09:39:52.887-03:00  INFO 10736 --- [smartfridge-backend] [           main] c.s.backend.SmartFridgeApplication       : Starting SmartFridgeApplication using Java 25.0.2 with PID 10736 (F:\Projetos\Geladeira\backend\target\classes started by ewertonesb in F:\Projetos\Geladeira\backend)
+2026-06-18T09:39:52.892-03:00  INFO 10736 --- [smartfridge-backend] [           main] c.s.backend.SmartFridgeApplication       : The following 1 profile is active: "dev"
+2026-06-18T09:39:53.620-03:00  INFO 10736 --- [smartfridge-backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-18T09:39:53.701-03:00  INFO 10736 --- [smartfridge-backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 72 ms. Found 6 JPA repository interfaces.
 WARNING: A restricted method in java.lang.System has been called
 WARNING: java.lang.System::load has been called by org.apache.tomcat.jni.Library in an unnamed module (file:/C:/Users/ewertonesb/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.30/tomcat-embed-core-10.1.30.jar)
 WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
 WARNING: Restricted methods will be blocked in a future release unless native access is enabled
 
-2026-06-10T16:42:32.155-03:00  INFO 22464 --- [smartfridge-backend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-06-10T16:42:32.169-03:00  INFO 22464 --- [smartfridge-backend] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-06-10T16:42:32.171-03:00  INFO 22464 --- [smartfridge-backend] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.30]
-2026-06-10T16:42:32.223-03:00  INFO 22464 --- [smartfridge-backend] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-06-10T16:42:32.226-03:00  INFO 22464 --- [smartfridge-backend] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1988 ms
-2026-06-10T16:42:32.332-03:00  INFO 22464 --- [smartfridge-backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-06-10T16:42:32.496-03:00  INFO 22464 --- [smartfridge-backend] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:smartfridge user=SA
-2026-06-10T16:42:32.499-03:00  INFO 22464 --- [smartfridge-backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-06-10T16:42:32.512-03:00  INFO 22464 --- [smartfridge-backend] [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:smartfridge'
-2026-06-10T16:42:32.651-03:00  INFO 22464 --- [smartfridge-backend] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-06-10T16:42:32.695-03:00  INFO 22464 --- [smartfridge-backend] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
-2026-06-10T16:42:32.724-03:00  INFO 22464 --- [smartfridge-backend] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-06-10T16:42:32.970-03:00  INFO 22464 --- [smartfridge-backend] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-06-10T16:42:33.950-03:00  INFO 22464 --- [smartfridge-backend] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-18T09:39:54.546-03:00  INFO 10736 --- [smartfridge-backend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-18T09:39:54.560-03:00  INFO 10736 --- [smartfridge-backend] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-18T09:39:54.563-03:00  INFO 10736 --- [smartfridge-backend] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.30]
+2026-06-18T09:39:54.668-03:00  INFO 10736 --- [smartfridge-backend] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-06-18T09:39:54.674-03:00  INFO 10736 --- [smartfridge-backend] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1741 ms
+2026-06-18T09:39:54.810-03:00  INFO 10736 --- [smartfridge-backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-06-18T09:39:55.002-03:00  INFO 10736 --- [smartfridge-backend] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:smartfridge user=SA
+2026-06-18T09:39:55.006-03:00  INFO 10736 --- [smartfridge-backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-06-18T09:39:55.018-03:00  INFO 10736 --- [smartfridge-backend] [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:smartfridge'
+2026-06-18T09:39:55.201-03:00  INFO 10736 --- [smartfridge-backend] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-18T09:39:55.266-03:00  INFO 10736 --- [smartfridge-backend] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2026-06-18T09:39:55.304-03:00  INFO 10736 --- [smartfridge-backend] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-18T09:39:55.567-03:00  INFO 10736 --- [smartfridge-backend] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-18T09:39:56.462-03:00  INFO 10736 --- [smartfridge-backend] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
 Hibernate: 
     create table agenda_events (
         id bigint generated by default as identity,
@@ -166,14 +166,14 @@ Hibernate:
        add constraint FKece38baqnsrui5dpl9dndd58o 
        foreign key (user_id) 
        references users
-2026-06-10T16:42:34.266-03:00  INFO 22464 --- [smartfridge-backend] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-06-10T16:42:34.603-03:00  INFO 22464 --- [smartfridge-backend] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-06-10T16:42:34.987-03:00  INFO 22464 --- [smartfridge-backend] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-06-10T16:42:34.991-03:00  WARN 22464 --- [smartfridge-backend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
-2026-06-10T16:42:35.185-03:00  WARN 22464 --- [smartfridge-backend] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-06-10T16:42:35.600-03:00  INFO 22464 --- [smartfridge-backend] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
-2026-06-10T16:42:36.092-03:00  INFO 22464 --- [smartfridge-backend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2026-06-10T16:42:36.110-03:00  INFO 22464 --- [smartfridge-backend] [           main] c.s.backend.SmartFridgeApplication       : Started SmartFridgeApplication in 6.253 seconds (process running for 6.695)
+2026-06-18T09:39:56.692-03:00  INFO 10736 --- [smartfridge-backend] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-18T09:39:57.105-03:00  INFO 10736 --- [smartfridge-backend] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-18T09:39:57.496-03:00  INFO 10736 --- [smartfridge-backend] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-06-18T09:39:57.500-03:00  WARN 10736 --- [smartfridge-backend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2026-06-18T09:39:57.963-03:00  WARN 10736 --- [smartfridge-backend] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-18T09:39:58.269-03:00  INFO 10736 --- [smartfridge-backend] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-06-18T09:39:58.796-03:00  INFO 10736 --- [smartfridge-backend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-18T09:39:58.811-03:00  INFO 10736 --- [smartfridge-backend] [           main] c.s.backend.SmartFridgeApplication       : Started SmartFridgeApplication in 6.259 seconds (process running for 6.611)
 Hibernate: 
     select
         ue1_0.id 
@@ -190,9 +190,31 @@ Hibernate:
         (created_at, email, name, password, id) 
     values
         (?, ?, ?, ?, default)
-2026-06-10T16:42:36.658-03:00  INFO 22464 --- [smartfridge-backend] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-06-10T16:42:36.660-03:00  INFO 22464 --- [smartfridge-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-06-10T16:42:36.665-03:00  INFO 22464 --- [smartfridge-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-06-18T09:39:59.250-03:00  INFO 10736 --- [smartfridge-backend] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-18T09:39:59.253-03:00  INFO 10736 --- [smartfridge-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-06-18T09:39:59.259-03:00  INFO 10736 --- [smartfridge-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
 Hibernate: 
     select
         ue1_0.id,
@@ -222,6 +244,1691 @@ Hibernate:
         products pe1_0 
     where
         pe1_0.user_id=?
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=?
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=?
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        hbe1_0.id,
+        hbe1_0.amount,
+        hbe1_0.category,
+        hbe1_0.created_at,
+        hbe1_0.description,
+        hbe1_0.due_date,
+        hbe1_0.paid_at,
+        hbe1_0.user_id 
+    from
+        house_bills hbe1_0 
+    where
+        hbe1_0.user_id=? 
+    order by
+        hbe1_0.due_date
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=?
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=?
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=?
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        hbe1_0.id,
+        hbe1_0.amount,
+        hbe1_0.category,
+        hbe1_0.created_at,
+        hbe1_0.description,
+        hbe1_0.due_date,
+        hbe1_0.paid_at,
+        hbe1_0.user_id 
+    from
+        house_bills hbe1_0 
+    where
+        hbe1_0.user_id=? 
+    order by
+        hbe1_0.due_date
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=?
+Hibernate: 
+    select
+        nle1_0.id,
+        nle1_0.created_at,
+        nle1_0.event_date,
+        nle1_0.product_id,
+        nle1_0.source_date,
+        nle1_0.source_id,
+        nle1_0.source_label,
+        nle1_0.source_module,
+        nle1_0.type,
+        nle1_0.user_id 
+    from
+        notification_logs nle1_0 
+    where
+        nle1_0.user_id=? 
+    order by
+        nle1_0.id desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        pe1_0.id,
+        pe1_0.created_at,
+        pe1_0.expiration_date,
+        pe1_0.manufacture_date,
+        pe1_0.name,
+        pe1_0.quantity,
+        pe1_0.status,
+        pe1_0.user_id 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+    order by
+        pe1_0.created_at desc 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        pe1_0.id,
+        pe1_0.created_at,
+        pe1_0.expiration_date,
+        pe1_0.manufacture_date,
+        pe1_0.name,
+        pe1_0.quantity,
+        pe1_0.status,
+        pe1_0.user_id 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=? 
+    order by
+        pe1_0.created_at desc 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        pe1_0.id,
+        pe1_0.created_at,
+        pe1_0.expiration_date,
+        pe1_0.manufacture_date,
+        pe1_0.name,
+        pe1_0.quantity,
+        pe1_0.status,
+        pe1_0.user_id 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=? 
+    order by
+        pe1_0.created_at desc 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=?
+Hibernate: 
+    select
+        slie1_0.id,
+        slie1_0.checked,
+        slie1_0.created_at,
+        slie1_0.name,
+        slie1_0.quantity,
+        slie1_0.user_id 
+    from
+        shopping_list_items slie1_0 
+    where
+        slie1_0.user_id=? 
+    order by
+        slie1_0.created_at desc
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=?
+2026-06-18T09:50:05.135-03:00  WARN 10736 --- [smartfridge-backend] [nio-8080-exec-3] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
+	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
+
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    insert 
+    into
+        products
+        (created_at, expiration_date, manufacture_date, name, quantity, status, user_id, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        products
+        (created_at, expiration_date, manufacture_date, name, quantity, status, user_id, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        products
+        (created_at, expiration_date, manufacture_date, name, quantity, status, user_id, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=?
+Hibernate: 
+    select
+        pe1_0.id,
+        pe1_0.created_at,
+        pe1_0.expiration_date,
+        pe1_0.manufacture_date,
+        pe1_0.name,
+        pe1_0.quantity,
+        pe1_0.status,
+        pe1_0.user_id 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+    order by
+        pe1_0.created_at desc 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        pe1_0.id,
+        pe1_0.created_at,
+        pe1_0.expiration_date,
+        pe1_0.manufacture_date,
+        pe1_0.name,
+        pe1_0.quantity,
+        pe1_0.status,
+        pe1_0.user_id 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=? 
+    order by
+        pe1_0.created_at desc 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        pe1_0.id,
+        pe1_0.created_at,
+        pe1_0.expiration_date,
+        pe1_0.manufacture_date,
+        pe1_0.name,
+        pe1_0.quantity,
+        pe1_0.status,
+        pe1_0.user_id 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=? 
+    order by
+        pe1_0.created_at desc 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=?
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=?
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=?
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=?
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=?
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        hbe1_0.id,
+        hbe1_0.amount,
+        hbe1_0.category,
+        hbe1_0.created_at,
+        hbe1_0.description,
+        hbe1_0.due_date,
+        hbe1_0.paid_at,
+        hbe1_0.user_id 
+    from
+        house_bills hbe1_0 
+    where
+        hbe1_0.user_id=? 
+    order by
+        hbe1_0.due_date
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    insert 
+    into
+        agenda_events
+        (created_at, description, end_at, start_at, status, title, user_id, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=?
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=?
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=?
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        hbe1_0.id,
+        hbe1_0.amount,
+        hbe1_0.category,
+        hbe1_0.created_at,
+        hbe1_0.description,
+        hbe1_0.due_date,
+        hbe1_0.paid_at,
+        hbe1_0.user_id 
+    from
+        house_bills hbe1_0 
+    where
+        hbe1_0.user_id=? 
+    order by
+        hbe1_0.due_date
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=?
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=?
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=?
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        hbe1_0.id,
+        hbe1_0.amount,
+        hbe1_0.category,
+        hbe1_0.created_at,
+        hbe1_0.description,
+        hbe1_0.due_date,
+        hbe1_0.paid_at,
+        hbe1_0.user_id 
+    from
+        house_bills hbe1_0 
+    where
+        hbe1_0.user_id=? 
+    order by
+        hbe1_0.due_date
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    insert 
+    into
+        agenda_events
+        (created_at, description, end_at, start_at, status, title, user_id, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=?
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
+Hibernate: 
+    select
+        aee1_0.id,
+        aee1_0.created_at,
+        aee1_0.description,
+        aee1_0.end_at,
+        aee1_0.start_at,
+        aee1_0.status,
+        aee1_0.title,
+        aee1_0.user_id 
+    from
+        agenda_events aee1_0 
+    where
+        aee1_0.user_id=? 
+        and (
+            ? is null 
+            or aee1_0.status=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at>=?
+        ) 
+        and (
+            ? is null 
+            or aee1_0.start_at<=?
+        ) 
+    order by
+        aee1_0.start_at
 Hibernate: 
     select
         count(pe1_0.id) 
@@ -471,22 +2178,6 @@ Hibernate:
         hbe1_0.due_date
 Hibernate: 
     select
-        hbe1_0.id,
-        hbe1_0.amount,
-        hbe1_0.category,
-        hbe1_0.created_at,
-        hbe1_0.description,
-        hbe1_0.due_date,
-        hbe1_0.paid_at,
-        hbe1_0.user_id 
-    from
-        house_bills hbe1_0 
-    where
-        hbe1_0.user_id=? 
-    order by
-        hbe1_0.due_date
-Hibernate: 
-    select
         count(pe1_0.id) 
     from
         products pe1_0 
@@ -494,50 +2185,6 @@ Hibernate:
         pe1_0.user_id=?
 Hibernate: 
     select
-        count(pe1_0.id) 
-    from
-        products pe1_0 
-    where
-        pe1_0.user_id=? 
-        and pe1_0.status=?
-Hibernate: 
-    select
-        count(pe1_0.id) 
-    from
-        products pe1_0 
-    where
-        pe1_0.user_id=? 
-        and pe1_0.status=?
-Hibernate: 
-    select
-        aee1_0.id,
-        aee1_0.created_at,
-        aee1_0.description,
-        aee1_0.end_at,
-        aee1_0.start_at,
-        aee1_0.status,
-        aee1_0.title,
-        aee1_0.user_id 
-    from
-        agenda_events aee1_0 
-    where
-        aee1_0.user_id=? 
-        and (
-            ? is null 
-            or aee1_0.status=?
-        ) 
-        and (
-            ? is null 
-            or aee1_0.start_at>=?
-        ) 
-        and (
-            ? is null 
-            or aee1_0.start_at<=?
-        ) 
-    order by
-        aee1_0.start_at
-Hibernate: 
-    select
         hbe1_0.id,
         hbe1_0.amount,
         hbe1_0.category,
@@ -552,140 +2199,6 @@ Hibernate:
         hbe1_0.user_id=? 
     order by
         hbe1_0.due_date
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.email=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.id=?
-Hibernate: 
-    insert 
-    into
-        house_bills
-        (amount, category, created_at, description, due_date, paid_at, user_id, id) 
-    values
-        (?, ?, ?, ?, ?, ?, ?, default)
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.email=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.email=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.email=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.id=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.id=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.id=?
-Hibernate: 
-    select
-        hbe1_0.id,
-        hbe1_0.amount,
-        hbe1_0.category,
-        hbe1_0.created_at,
-        hbe1_0.description,
-        hbe1_0.due_date,
-        hbe1_0.paid_at,
-        hbe1_0.user_id 
-    from
-        house_bills hbe1_0 
-    where
-        hbe1_0.user_id=? 
-    order by
-        hbe1_0.due_date
-Hibernate: 
-    select
-        hbe1_0.id,
-        hbe1_0.amount,
-        hbe1_0.category,
-        hbe1_0.created_at,
-        hbe1_0.description,
-        hbe1_0.due_date,
-        hbe1_0.paid_at,
-        hbe1_0.user_id 
-    from
-        house_bills hbe1_0 
-    where
-        hbe1_0.user_id=? 
-    order by
-        hbe1_0.due_date
-Hibernate: 
-    select
-        count(pe1_0.id) 
-    from
-        products pe1_0 
-    where
-        pe1_0.user_id=?
 Hibernate: 
     select
         count(pe1_0.id) 
@@ -778,6 +2291,50 @@ Hibernate:
     from
         users ue1_0 
     where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
         ue1_0.id=?
 Hibernate: 
     select
@@ -792,192 +2349,68 @@ Hibernate:
         ue1_0.id=?
 Hibernate: 
     select
-        aee1_0.id,
-        aee1_0.created_at,
-        aee1_0.description,
-        aee1_0.end_at,
-        aee1_0.start_at,
-        aee1_0.status,
-        aee1_0.title,
-        aee1_0.user_id 
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
     from
-        agenda_events aee1_0 
+        users ue1_0 
     where
-        aee1_0.user_id=? 
-        and (
-            ? is null 
-            or aee1_0.status=?
-        ) 
-        and (
-            ? is null 
-            or aee1_0.start_at>=?
-        ) 
-        and (
-            ? is null 
-            or aee1_0.start_at<=?
-        ) 
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        pe1_0.id,
+        pe1_0.created_at,
+        pe1_0.expiration_date,
+        pe1_0.manufacture_date,
+        pe1_0.name,
+        pe1_0.quantity,
+        pe1_0.status,
+        pe1_0.user_id 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
     order by
-        aee1_0.start_at
-Hibernate: 
-    select
-        aee1_0.id,
-        aee1_0.created_at,
-        aee1_0.description,
-        aee1_0.end_at,
-        aee1_0.start_at,
-        aee1_0.status,
-        aee1_0.title,
-        aee1_0.user_id 
-    from
-        agenda_events aee1_0 
-    where
-        aee1_0.user_id=? 
-        and (
-            ? is null 
-            or aee1_0.status=?
-        ) 
-        and (
-            ? is null 
-            or aee1_0.start_at>=?
-        ) 
-        and (
-            ? is null 
-            or aee1_0.start_at<=?
-        ) 
-    order by
-        aee1_0.start_at
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.email=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.email=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.email=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.email=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.email=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.email=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.id=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.id=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.id=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.id=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.id=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.id=?
+        pe1_0.created_at desc 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
 Hibernate: 
     select
         count(pe1_0.id) 
@@ -1027,34 +2460,6 @@ Hibernate:
         ? rows 
     fetch
         first ? rows only
-Hibernate: 
-    select
-        pe1_0.id,
-        pe1_0.created_at,
-        pe1_0.expiration_date,
-        pe1_0.manufacture_date,
-        pe1_0.name,
-        pe1_0.quantity,
-        pe1_0.status,
-        pe1_0.user_id 
-    from
-        products pe1_0 
-    where
-        pe1_0.user_id=? 
-    order by
-        pe1_0.created_at desc 
-    offset
-        ? rows 
-    fetch
-        first ? rows only
-Hibernate: 
-    select
-        count(pe1_0.id) 
-    from
-        products pe1_0 
-    where
-        pe1_0.user_id=? 
-        and pe1_0.status=?
 Hibernate: 
     select
         slie1_0.id,
@@ -1097,10 +2502,14 @@ Hibernate:
     where
         pe1_0.user_id=? 
         and pe1_0.status=?
-2026-06-10T16:50:47.197-03:00  WARN 22464 --- [smartfridge-backend] [nio-8080-exec-5] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
-	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
-	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
-
+Hibernate: 
+    select
+        count(pe1_0.id) 
+    from
+        products pe1_0 
+    where
+        pe1_0.user_id=? 
+        and pe1_0.status=?
 Hibernate: 
     select
         ue1_0.id,
@@ -1126,74 +2535,10 @@ Hibernate:
 Hibernate: 
     insert 
     into
-        products
-        (created_at, expiration_date, manufacture_date, name, quantity, status, user_id, id) 
+        shopping_list_items
+        (checked, created_at, name, quantity, user_id, id) 
     values
-        (?, ?, ?, ?, ?, ?, ?, default)
-Hibernate: 
-    select
-        nle1_0.id 
-    from
-        notification_logs nle1_0 
-    where
-        nle1_0.user_id=? 
-        and nle1_0.source_module=? 
-        and nle1_0.source_id=? 
-        and nle1_0.type=? 
-        and nle1_0.event_date=? 
-    fetch
-        first ? rows only
-Hibernate: 
-    insert 
-    into
-        notification_logs
-        (created_at, event_date, product_id, source_date, source_id, source_label, source_module, type, user_id, id) 
-    values
-        (?, ?, ?, ?, ?, ?, ?, ?, ?, default)
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.email=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.email=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.email=?
-Hibernate: 
-    select
-        ue1_0.id,
-        ue1_0.created_at,
-        ue1_0.email,
-        ue1_0.name,
-        ue1_0.password 
-    from
-        users ue1_0 
-    where
-        ue1_0.email=?
+        (?, ?, ?, ?, ?, default)
 Hibernate: 
     select
         ue1_0.id,
@@ -1218,6 +2563,31 @@ Hibernate:
         ue1_0.id=?
 Hibernate: 
     select
+        slie1_0.id,
+        slie1_0.checked,
+        slie1_0.created_at,
+        slie1_0.name,
+        slie1_0.quantity,
+        slie1_0.user_id 
+    from
+        shopping_list_items slie1_0 
+    where
+        slie1_0.user_id=? 
+    order by
+        slie1_0.created_at desc
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
         ue1_0.id,
         ue1_0.created_at,
         ue1_0.email,
@@ -1229,6 +2599,40 @@ Hibernate:
         ue1_0.id=?
 Hibernate: 
     select
+        slie1_0.id,
+        slie1_0.checked,
+        slie1_0.created_at,
+        slie1_0.name,
+        slie1_0.quantity,
+        slie1_0.user_id 
+    from
+        shopping_list_items slie1_0 
+    where
+        slie1_0.id=? 
+        and slie1_0.user_id=?
+Hibernate: 
+    update
+        shopping_list_items 
+    set
+        checked=?,
+        name=?,
+        quantity=?,
+        user_id=? 
+    where
+        id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
         ue1_0.id,
         ue1_0.created_at,
         ue1_0.email,
@@ -1240,6 +2644,31 @@ Hibernate:
         ue1_0.id=?
 Hibernate: 
     select
+        slie1_0.id,
+        slie1_0.checked,
+        slie1_0.created_at,
+        slie1_0.name,
+        slie1_0.quantity,
+        slie1_0.user_id 
+    from
+        shopping_list_items slie1_0 
+    where
+        slie1_0.user_id=? 
+    order by
+        slie1_0.created_at desc
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
         ue1_0.id,
         ue1_0.created_at,
         ue1_0.email,
@@ -1251,6 +2680,40 @@ Hibernate:
         ue1_0.id=?
 Hibernate: 
     select
+        slie1_0.id,
+        slie1_0.checked,
+        slie1_0.created_at,
+        slie1_0.name,
+        slie1_0.quantity,
+        slie1_0.user_id 
+    from
+        shopping_list_items slie1_0 
+    where
+        slie1_0.id=? 
+        and slie1_0.user_id=?
+Hibernate: 
+    update
+        shopping_list_items 
+    set
+        checked=?,
+        name=?,
+        quantity=?,
+        user_id=? 
+    where
+        id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
         ue1_0.id,
         ue1_0.created_at,
         ue1_0.email,
@@ -1262,153 +2725,96 @@ Hibernate:
         ue1_0.id=?
 Hibernate: 
     select
-        count(pe1_0.id) 
+        slie1_0.id,
+        slie1_0.checked,
+        slie1_0.created_at,
+        slie1_0.name,
+        slie1_0.quantity,
+        slie1_0.user_id 
     from
-        products pe1_0 
+        shopping_list_items slie1_0 
     where
-        pe1_0.user_id=?
-Hibernate: 
-    select
-        pe1_0.id,
-        pe1_0.created_at,
-        pe1_0.expiration_date,
-        pe1_0.manufacture_date,
-        pe1_0.name,
-        pe1_0.quantity,
-        pe1_0.status,
-        pe1_0.user_id 
-    from
-        products pe1_0 
-    where
-        pe1_0.user_id=? 
-        and pe1_0.status=? 
+        slie1_0.user_id=? 
     order by
-        pe1_0.created_at desc 
-    offset
-        ? rows 
-    fetch
-        first ? rows only
+        slie1_0.created_at desc
 Hibernate: 
     select
-        count(pe1_0.id) 
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
     from
-        products pe1_0 
+        users ue1_0 
     where
-        pe1_0.user_id=?
+        ue1_0.email=?
 Hibernate: 
     select
-        pe1_0.id,
-        pe1_0.created_at,
-        pe1_0.expiration_date,
-        pe1_0.manufacture_date,
-        pe1_0.name,
-        pe1_0.quantity,
-        pe1_0.status,
-        pe1_0.user_id 
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
     from
-        products pe1_0 
+        users ue1_0 
     where
-        pe1_0.user_id=? 
+        ue1_0.id=?
+Hibernate: 
+    select
+        slie1_0.id,
+        slie1_0.checked,
+        slie1_0.created_at,
+        slie1_0.name,
+        slie1_0.quantity,
+        slie1_0.user_id 
+    from
+        shopping_list_items slie1_0 
+    where
+        slie1_0.id=? 
+        and slie1_0.user_id=?
+Hibernate: 
+    update
+        shopping_list_items 
+    set
+        checked=?,
+        name=?,
+        quantity=?,
+        user_id=? 
+    where
+        id=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.email=?
+Hibernate: 
+    select
+        ue1_0.id,
+        ue1_0.created_at,
+        ue1_0.email,
+        ue1_0.name,
+        ue1_0.password 
+    from
+        users ue1_0 
+    where
+        ue1_0.id=?
+Hibernate: 
+    select
+        slie1_0.id,
+        slie1_0.checked,
+        slie1_0.created_at,
+        slie1_0.name,
+        slie1_0.quantity,
+        slie1_0.user_id 
+    from
+        shopping_list_items slie1_0 
+    where
+        slie1_0.user_id=? 
     order by
-        pe1_0.created_at desc 
-    offset
-        ? rows 
-    fetch
-        first ? rows only
-Hibernate: 
-    select
-        pe1_0.id,
-        pe1_0.created_at,
-        pe1_0.expiration_date,
-        pe1_0.manufacture_date,
-        pe1_0.name,
-        pe1_0.quantity,
-        pe1_0.status,
-        pe1_0.user_id 
-    from
-        products pe1_0 
-    where
-        pe1_0.user_id=? 
-        and pe1_0.status=? 
-    order by
-        pe1_0.created_at desc 
-    offset
-        ? rows 
-    fetch
-        first ? rows only
-Hibernate: 
-    select
-        count(pe1_0.id) 
-    from
-        products pe1_0 
-    where
-        pe1_0.user_id=? 
-        and pe1_0.status=?
-Hibernate: 
-    select
-        count(pe1_0.id) 
-    from
-        products pe1_0 
-    where
-        pe1_0.user_id=? 
-        and pe1_0.status=?
-Hibernate: 
-    select
-        count(pe1_0.id) 
-    from
-        products pe1_0 
-    where
-        pe1_0.user_id=? 
-        and pe1_0.status=?
-Hibernate: 
-    select
-        count(pe1_0.id) 
-    from
-        products pe1_0 
-    where
-        pe1_0.user_id=? 
-        and pe1_0.status=?
-Hibernate: 
-    select
-        aee1_0.id,
-        aee1_0.created_at,
-        aee1_0.description,
-        aee1_0.end_at,
-        aee1_0.start_at,
-        aee1_0.status,
-        aee1_0.title,
-        aee1_0.user_id 
-    from
-        agenda_events aee1_0 
-    where
-        aee1_0.user_id=? 
-        and (
-            ? is null 
-            or aee1_0.status=?
-        ) 
-        and (
-            ? is null 
-            or aee1_0.start_at>=?
-        ) 
-        and (
-            ? is null 
-            or aee1_0.start_at<=?
-        ) 
-    order by
-        aee1_0.start_at
-Hibernate: 
-    select
-        hbe1_0.id,
-        hbe1_0.amount,
-        hbe1_0.category,
-        hbe1_0.created_at,
-        hbe1_0.description,
-        hbe1_0.due_date,
-        hbe1_0.paid_at,
-        hbe1_0.user_id 
-    from
-        house_bills hbe1_0 
-    where
-        hbe1_0.user_id=? 
-    order by
-        hbe1_0.due_date
+        slie1_0.created_at desc
