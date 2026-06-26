@@ -34,7 +34,7 @@ class HomeHubPage extends ConsumerWidget {
             ),
             const SizedBox(height: 6),
             const Text(
-              'Sua casa em um so lugar',
+              'Sua casa em um só lugar',
               style: TextStyle(
                 color: Color(0xFF6F7781),
                 fontSize: 16,

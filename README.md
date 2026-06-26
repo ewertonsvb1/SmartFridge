@@ -31,12 +31,21 @@ cd backend
 mvn clean test
 ```
 
+Para validar apenas o bootstrap versionado do schema:
+
+```bash
+cd backend
+mvn -B "-Dtest=DatabaseMigrationTest" test
+```
+
 ### Profile prod (PostgreSQL)
 
 ```bash
 cd backend
 mvn spring-boot:run -Dspring-boot.run.profiles=prod
 ```
+
+No profile `prod`, o schema passa a ser bootstrapado por migrations versionadas em `backend/src/main/resources/db/migration` antes da validacao final do Hibernate com `ddl-auto: validate`.
 
 Variáveis obrigatórias para prod:
 
@@ -60,6 +69,29 @@ Execute com:
 ```bash
 cd backend
 mvn spring-boot:run -Dspring-boot.run.profiles=prod
+```
+
+Se o banco estiver vazio, o Flyway aplica a migration inicial antes da subida da aplicacao. Evolucoes futuras de schema devem entrar como novas migrations versionadas, sem criacao manual de tabelas.
+
+### Render + Supabase
+
+Configuracao minima esperada para publicacao do backend:
+
+- Render Web Service com deploy por `backend/Dockerfile`
+- `PORT` fornecida pelo Render e consumida automaticamente pelo backend
+- healthcheck em `/actuator/health`
+- `DB_URL`, `DB_USER`, `DB_PASS`, `JWT_SECRET` e `CORS_ALLOWED_ORIGINS` como secrets de producao
+
+Estrategia de conexao adotada:
+
+- usar conexao PostgreSQL direta do Supabase com `sslmode=require`
+- manter Flyway e Hibernate validando o schema na mesma conexao JDBC de `prod`
+- nao usar transaction pooler como padrao inicial, para evitar friccao com migrations e com o ciclo de conexao JDBC do Spring Boot
+
+Exemplo de `DB_URL` para Supabase:
+
+```text
+jdbc:postgresql://db.seu-projeto.supabase.co:5432/postgres?sslmode=require
 ```
 
 **Importante:** O arquivo `.env` está no `.gitignore` e nunca será commitado.
@@ -90,6 +122,8 @@ Override opcional da URL da API ao rodar o app:
 ```bash
 flutter run --dart-define=API_BASE_URL=http://SEU_HOST:PORTA
 ```
+
+Quando `APP_ENV=prod`, `API_BASE_URL` passa a ser obrigatoria e deve ser uma URL absoluta `http(s)` que nao aponte para `localhost`, `127.0.0.1` ou `10.0.2.2`.
 
 ### Rodar no Android fisico
 
@@ -155,6 +189,25 @@ cd mobile
 flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://api.seudominio.com
 flutter build appbundle --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://api.seudominio.com
 ```
+
+No `release`, o manifesto Android desabilita `cleartext traffic`, entao o endpoint configurado em `API_BASE_URL` deve estar acessivel pela URL publica planejada para publicacao. O fluxo local atual continua preservado em `debug`.
+
+### Smoke test em device para release
+
+Use um APK release apontando para a API publicada:
+
+```bash
+cd mobile
+flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://api.seudominio.com
+```
+
+Checklist minimo no Android fisico:
+
+1. instalar o APK release gerado
+2. abrir o app sem depender de `adb reverse`
+3. criar conta ou autenticar com uma conta real
+4. validar carregamento do fluxo principal contra a API publica
+5. confirmar que nao ha dependencia de `localhost` ou `10.0.2.2`
 
 Variáveis de ambiente para assinatura (CI):
 - ANDROID_STORE_FILE

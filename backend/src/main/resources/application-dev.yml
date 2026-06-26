@@ -11,6 +11,8 @@ spring:
       hibernate:
         format_sql: true
     show-sql: true
+  flyway:
+    enabled: false
   h2:
     console:
       enabled: true
