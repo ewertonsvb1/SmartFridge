@@ -54,64 +54,33 @@ No PowerShell:
 cd F:\Projetos\Geladeira\backend
 mvn spring-boot:run
 
-Se tudo subir certo, a API deve ficar disponivel em:
+Se tudo subir certo, a API publicada usada no app fica em:
 
-http://localhost:8080
+https://smartfridge-backend-c27p.onrender.com
 
 Observacao:
 - para teste local simples, pode usar o profile dev com H2
 - nao precisa PostgreSQL so para um teste rapido no celular
 
 
-4. DESCOBRIR O IP DA SUA MAQUINA
+4. CONFIRMAR A URL PUBLICA
 
-O celular nao consegue acessar "localhost" do seu PC.
-Ele precisa acessar o IP local da sua maquina na rede.
+O build de release agora deve usar a API publicada no Render.
 
-No PowerShell, rode:
+Confirme que esta URL esta respondendo:
 
-ipconfig
-
-Procure a placa de rede que voce esta usando.
-Normalmente sera uma destas:
-- Adaptador de Rede sem Fio Wi-Fi
-- Adaptador Ethernet
-
-Dentro dela, procure:
-
-Endereco IPv4 . . . . . . . . . . . . : 192.168.x.x
-
-Exemplo real de formato:
-
-192.168.0.15
-
-Esse sera o IP para usar no APK.
-
-Se aparecer mais de um IP:
-- use o da rede em que o celular tambem esta conectado
-- normalmente comeca com 192.168.x.x ou 10.x.x.x
+https://smartfridge-backend-c27p.onrender.com/actuator/health
 
 
 5. TESTAR SE O BACKEND ESTA ACESSIVEL NA REDE
 
-Com o backend rodando, teste no navegador do seu computador:
+Teste no navegador do seu computador:
 
-http://SEU_IP:8080
+https://smartfridge-backend-c27p.onrender.com/actuator/health
 
-Exemplo:
+Depois teste no navegador do celular a mesma URL.
 
-http://192.168.0.15:8080
-
-Depois teste no navegador do celular:
-
-http://SEU_IP:8080
-
-Se abrir no celular, a rede esta pronta.
-
-Se nao funcionar:
-- confira se o backend ainda esta rodando
-- confira se o IP esta correto
-- confira se o firewall do Windows nao esta bloqueando a porta 8080
+Se abrir nos dois, a API publicada esta pronta.
 
 
 6. LIBERAR O FIREWALL DO WINDOWS, SE NECESSARIO
@@ -139,23 +108,23 @@ Se quiser fazer pela interface avancada:
 
 7. GERAR O APK
 
-Agora gere o APK apontando para o IP da sua maquina.
+Agora gere o APK apontando para a URL publica do Render.
 
 No PowerShell:
 
 cd F:\Projetos\Geladeira\mobile
 flutter pub get
-flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=http://SEU_IP:8080
+flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://smartfridge-backend-c27p.onrender.com
 
 Exemplo:
 
-flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=http://192.168.0.15:8080
+flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://smartfridge-backend-c27p.onrender.com
 
 Importante:
-- use http://
+- use a URL HTTPS publicada
 - nao use localhost
 - nao use 127.0.0.1
-- o IP precisa ser o do computador, nao o do celular
+- nao use IP local para o build de release
 
 Observacao importante:
 - o projeto ja esta configurado para gerar `release` com a chave de debug quando nao existir keystore propria
@@ -172,7 +141,7 @@ F:\Projetos\Geladeira\mobile\build\app\outputs\flutter-apk\app-release.apk
 Opcao com script pronto do projeto:
 
 cd F:\Projetos\Geladeira
-.\scripts\build_mobile_apk.ps1 -ApiBaseUrl http://SEU_IP:8080
+.\scripts\build_mobile_apk.ps1 -ApiBaseUrl https://smartfridge-backend-c27p.onrender.com
 
 
 9. INSTALAR O APK NO CELULAR
@@ -196,9 +165,8 @@ Opcao B - WhatsApp, Telegram, Drive ou e-mail:
 Confirme tudo isso:
 
 - o backend continua rodando no computador
-- computador e celular estao na mesma rede Wi-Fi
-- voce usou o IP correto no comando do build
-- a porta 8080 nao esta bloqueada
+- a URL publica do Render esta acessivel
+- voce usou a URL correta no comando do build
 - o Java ativo e o 17
 
 
@@ -225,23 +193,22 @@ Depois teste:
 
 Os erros mais comuns sao:
 
-1. IP errado
-- gere outro APK usando o IP correto do computador
+1. URL errada
+- gere outro APK usando a URL correta do Render
 
-2. Backend parado
-- rode de novo:
-  cd F:\Projetos\Geladeira\backend
-  mvn spring-boot:run
+2. Backend publicado indisponivel
+- valide o healthcheck em:
+  https://smartfridge-backend-c27p.onrender.com/actuator/health
 
 3. Firewall bloqueando
 - libere a porta 8080 no Windows
 
-4. Celular em outra rede
-- coloque celular e PC na mesma rede Wi-Fi
+4. Instabilidade de rede
+- valide se o celular consegue abrir a URL publica do Render
 
 5. APK gerado com URL errada
 - gere novamente com:
-  flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=http://SEU_IP:8080
+  flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://smartfridge-backend-c27p.onrender.com
 
 6. Java errado
 - se `java -version` mostrar Java 8 ou outra versao diferente de 17, o build Android pode falhar
@@ -258,23 +225,20 @@ Sequencia minima:
    cd F:\Projetos\Geladeira\backend
    mvn spring-boot:run
 
-3. descobrir IP:
-   ipconfig
-
 4. gerar APK:
    cd F:\Projetos\Geladeira\mobile
    flutter pub get
-   flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=http://SEU_IP:8080
+   flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://smartfridge-backend-c27p.onrender.com
 
 5. instalar:
    F:\Projetos\Geladeira\mobile\build\app\outputs\flutter-apk\app-release.apk
 
-6. testar no celular com a mesma rede Wi-Fi
+6. testar no celular usando a API publicada
 
 Opcional:
 - usar o script pronto:
   cd F:\Projetos\Geladeira
-  .\scripts\build_mobile_apk.ps1 -ApiBaseUrl http://SEU_IP:8080
+  .\scripts\build_mobile_apk.ps1 -ApiBaseUrl https://smartfridge-backend-c27p.onrender.com
 
 
 14. COMANDO MODELO FINAL
@@ -288,6 +252,4 @@ Gerar APK:
 
 cd F:\Projetos\Geladeira\mobile
 flutter pub get
-flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=http://192.168.0.15:8080
-
-Troque 192.168.0.15 pelo IP real da sua maquina.
+flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://smartfridge-backend-c27p.onrender.com

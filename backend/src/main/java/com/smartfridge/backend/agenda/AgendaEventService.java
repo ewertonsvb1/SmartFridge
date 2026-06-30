@@ -12,6 +12,8 @@ import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -40,7 +42,21 @@ public class AgendaEventService {
     public List<AgendaEventEntity> list(LocalDate date, LocalDate startDate, LocalDate endDate, AgendaEventStatus status) {
         RangeFilter filter = resolveRange(date, startDate, endDate);
         Long userId = authenticatedUserService.getCurrentUser().getId();
-        return agendaEventRepository.findVisibleEvents(userId, status, filter.from(), filter.to());
+        Specification<AgendaEventEntity> spec = AgendaEventSpecification.belongsToUser(userId);
+
+        if (status != null) {
+            spec = spec.and(AgendaEventSpecification.withStatus(status));
+        }
+
+        if (filter.from() != null) {
+            spec = spec.and(AgendaEventSpecification.startsAtOrAfter(filter.from()));
+        }
+
+        if (filter.to() != null) {
+            spec = spec.and(AgendaEventSpecification.startsAtOrBefore(filter.to()));
+        }
+
+        return agendaEventRepository.findAll(spec, Sort.by(Sort.Direction.ASC, "startAt"));
     }
 
     @Transactional(readOnly = true)

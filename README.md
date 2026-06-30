@@ -114,45 +114,29 @@ flutter run
 
 Base URL atual no app:
 
-- Android Emulator: http://10.0.2.2:8080
-- Web/Windows/Linux/macOS: http://localhost:8080
+- Padrão: https://smartfridge-backend-c27p.onrender.com
+- Override manual opcional por `API_BASE_URL`
 
 Override opcional da URL da API ao rodar o app:
 
 ```bash
-flutter run --dart-define=API_BASE_URL=http://SEU_HOST:PORTA
+flutter run --dart-define=API_BASE_URL=https://smartfridge-backend-c27p.onrender.com
 ```
 
-Quando `APP_ENV=prod`, `API_BASE_URL` passa a ser obrigatoria e deve ser uma URL absoluta `http(s)` que nao aponte para `localhost`, `127.0.0.1` ou `10.0.2.2`.
+Quando `API_BASE_URL` for informada, ela deve ser uma URL absoluta `http(s)`. Em `APP_ENV=prod`, hosts locais como `localhost`, `127.0.0.1` e `10.0.2.2` continuam rejeitados.
 
 ### Rodar no Android fisico
 
-Para aparelho Android real, o backend local precisa estar acessivel fora do emulador.
-
-Opcoes suportadas:
-
-1. Mesmo Wi-Fi:
-   - descubra o IP da sua maquina na rede local
-   - suba o backend em `http://0.0.0.0:8080` ou mantenha a porta acessivel na rede
-   - rode o app com:
+Para aparelho Android real, o fluxo padrao ja aponta para a API publicada no Render:
 
 ```bash
-flutter run --dart-define=API_BASE_URL=http://SEU_IP_LOCAL:8080
+flutter run --dart-define=API_BASE_URL=https://smartfridge-backend-c27p.onrender.com
 ```
 
-2. USB com `adb reverse`:
-   - conecte o Android com depuracao USB ativa
-   - execute:
+Se voce realmente precisar testar contra um backend local, passe uma URL absoluta manualmente por `API_BASE_URL`.
 
-```bash
-adb reverse tcp:8080 tcp:8080
-flutter run --dart-define=API_BASE_URL=http://127.0.0.1:8080
-```
+Observacao importante:
 
-Observacoes importantes:
-
-- `10.0.2.2` funciona apenas no Android Emulator
-- `localhost` no celular aponta para o proprio aparelho, nao para o seu PC
 - a leitura de QR Code no Android usa permissao de camera declarada no manifesto
 
 ### Configuração do App - Android
@@ -186,8 +170,8 @@ copy key.properties.example key.properties
 
 ```bash
 cd mobile
-flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://api.seudominio.com
-flutter build appbundle --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://api.seudominio.com
+flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://smartfridge-backend-c27p.onrender.com
+flutter build appbundle --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://smartfridge-backend-c27p.onrender.com
 ```
 
 No `release`, o manifesto Android desabilita `cleartext traffic`, entao o endpoint configurado em `API_BASE_URL` deve estar acessivel pela URL publica planejada para publicacao. O fluxo local atual continua preservado em `debug`.
@@ -198,7 +182,7 @@ Use um APK release apontando para a API publicada:
 
 ```bash
 cd mobile
-flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://api.seudominio.com
+flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://smartfridge-backend-c27p.onrender.com
 ```
 
 Checklist minimo no Android fisico:
@@ -307,8 +291,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\start_smarthouse_web.ps1 -For
 
 
 - executa `flutter pub get`
-- sobe o backend Spring Boot em `http://127.0.0.1:8080`
-- sobe o Flutter Web em `http://127.0.0.1:3000`
+- sobe o backend Spring Boot local para suporte ao ambiente web
+- sobe o Flutter Web local na porta configurada pelo script
 - abre o app no Chrome automaticamente
 
 Se preferir nao abrir o navegador:

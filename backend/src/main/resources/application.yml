@@ -6,7 +6,7 @@ spring:
 
 app:
   cors:
-    allowed-origin-patterns: http://localhost:*,http://127.0.0.1:*
+    allowed-origin-patterns: https://smartfridge-backend-c27p.onrender.com
 
 jwt:
   secret: ${JWT_SECRET:dev-only-secret-change-before-prod-32chars}

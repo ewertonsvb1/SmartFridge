@@ -2,7 +2,8 @@ param(
     [switch]$ForceRestart,
     [switch]$NoChrome,
     [int]$BackendPort = 8080,
-    [int]$WebPort = 3000
+    [int]$WebPort = 3000,
+    [string]$ApiBaseUrl = "https://smartfridge-backend-c27p.onrender.com"
 )
 
 $ErrorActionPreference = "Stop"
@@ -153,7 +154,7 @@ $flutterArguments = @(
     "127.0.0.1",
     "--web-port",
     $WebPort,
-    "--dart-define=API_BASE_URL=http://127.0.0.1:$BackendPort"
+    "--dart-define=API_BASE_URL=$ApiBaseUrl"
 )
 
 $mobileProcess = Start-Process `
@@ -186,6 +187,6 @@ Write-Host "Projeto inicializado com sucesso."
 Write-Host "Backend PID: $($backendProcess.Id)"
 Write-Host "Flutter Web PID: $($mobileProcess.Id)"
 Write-Host "App: $appUrl"
-Write-Host "API: http://127.0.0.1:$BackendPort"
+Write-Host "API configurada no Flutter: $ApiBaseUrl"
 Write-Host "Logs backend: $backendStdout | $backendStderr"
 Write-Host "Logs mobile: $mobileStdout | $mobileStderr"

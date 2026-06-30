@@ -42,7 +42,7 @@ Ou via Xcode:
 **Via Flutter:**
 ```bash
 cd mobile
-flutter build ios --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://api.seudominio.com
+flutter build ios --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://smartfridge-backend-c27p.onrender.com
 ```
 
 **Via Xcode:**

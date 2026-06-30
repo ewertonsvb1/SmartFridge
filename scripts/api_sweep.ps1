@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 
-$base = 'http://localhost:8081'
+$base = 'https://smartfridge-backend-c27p.onrender.com'
 $results = @()
 
 function Add-Result($name, $ok, $detail) {

@@ -17,7 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
         "DB_USER=sa",
         "DB_PASS=",
         "JWT_SECRET=test-only-secret-with-at-least-32-chars",
-        "CORS_ALLOWED_ORIGINS=http://localhost:*",
+        "CORS_ALLOWED_ORIGINS=https://smartfridge-backend-c27p.onrender.com",
         "spring.datasource.driver-class-name=org.h2.Driver"
 })
 @ActiveProfiles("prod")

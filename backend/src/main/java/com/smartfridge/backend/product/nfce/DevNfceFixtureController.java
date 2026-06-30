@@ -15,14 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Profile("dev")
 @RestController
 @RequestMapping("/dev/nfce-fixture")
 public class DevNfceFixtureController {
-
-    private static final String CONSULTATION_URL =
-            "http://127.0.0.1:8080/dev/nfce-fixture/consulta";
 
     private static final String CONSULTATION_BODY = """
             <nota>
@@ -50,10 +48,9 @@ public class DevNfceFixtureController {
             </nota>
             """;
 
-    private static final byte[] QR_CODE_PNG = createQrCode(CONSULTATION_URL);
-
     @GetMapping(produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<String> page() {
+        String consultationUrl = getConsultationUrl();
         String html = """
                 <!doctype html>
                 <html lang="pt-BR">
@@ -77,7 +74,7 @@ public class DevNfceFixtureController {
                   </div>
                 </body>
                 </html>
-                """.formatted(CONSULTATION_URL);
+                """.formatted(consultationUrl);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.TEXT_HTML)
@@ -93,10 +90,19 @@ public class DevNfceFixtureController {
 
     @GetMapping(value = "/qr.png", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> qrCode() {
+        byte[] qrCodePng = createQrCode(getConsultationUrl());
         return ResponseEntity.ok()
                 .header(HttpHeaders.CACHE_CONTROL, "no-store")
                 .contentType(MediaType.IMAGE_PNG)
-                .body(QR_CODE_PNG);
+                .body(qrCodePng);
+    }
+
+    private String getConsultationUrl() {
+        return ServletUriComponentsBuilder.fromCurrentRequestUri()
+                .replacePath("/dev/nfce-fixture/consulta")
+                .replaceQuery(null)
+                .build()
+                .toUriString();
     }
 
     private static byte[] createQrCode(String content) {

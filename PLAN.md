@@ -8,7 +8,7 @@ O código está perto do ponto de deploy. O que falta agora é principalmente ex
 2. Validar novamente os checks locais:
    - `cd backend && mvn -B test`
    - `cd mobile && flutter analyze`
-   - `cd mobile && flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://SUA_API`
+   - `cd mobile && flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://smartfridge-backend-c27p.onrender.com`
 3. Corrigir problemas de configuração de runtime, CORS, manifest Android, `API_BASE_URL` e docs do fluxo.
 4. Ajudar a interpretar qualquer erro que aparecer no Render, Supabase, Maven, Flutter ou Gradle.
 5. Montar comandos exatos para smoke test e rollback quando você tiver a URL publicada.
@@ -61,7 +61,7 @@ O código está perto do ponto de deploy. O que falta agora é principalmente ex
 
 ### 3. Validar o backend publicado
 1. Abra:
-   `https://SUA_API/actuator/health`
+   `https://smartfridge-backend-c27p.onrender.com/actuator/health`
 2. Confirme resposta `200`.
 3. Teste cadastro e login com usuário real.
 4. Se falhar no startup:
@@ -83,9 +83,9 @@ O código está perto do ponto de deploy. O que falta agora é principalmente ex
 1. Rode:
    `cd mobile`
 2. Gere o APK:
-   `flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://SUA_API`
+   `flutter build apk --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://smartfridge-backend-c27p.onrender.com`
 3. Se quiser bundle:
-   `flutter build appbundle --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://SUA_API`
+   `flutter build appbundle --release --dart-define=APP_ENV=prod --dart-define=API_BASE_URL=https://smartfridge-backend-c27p.onrender.com`
 
 ### 6. Validar no celular
 1. Instale o APK no Android físico.

@@ -74,6 +74,7 @@ Padrao atual:
 - `createdAt` preenchido em `@PrePersist`
 - relacoes com `@ManyToOne(fetch = FetchType.LAZY, optional = false)`
 - status de produto e notificacao persistidos como `EnumType.STRING`
+- filtros opcionais sensiveis a `null` em PostgreSQL devem preferir `Specification`/Criteria dinamica em vez de `@Query` com `:param is null or ...`
 
 ## Convencoes de API
 

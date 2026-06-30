@@ -71,7 +71,7 @@ Exemplos:
 
 - `Dio` configurado em `core/network/api_client.dart`
 - JWT e anexado automaticamente para rotas fora de `/auth`
-- URL base vem de `API_BASE_URL` ou de `resolveApiBaseUrl()`
+- URL base vem de `API_BASE_URL` ou do default publicado em `https://smartfridge-backend-c27p.onrender.com`
 - produtos consomem pagina Spring, lendo `response.data['content']`
 
 ## Observacoes importantes

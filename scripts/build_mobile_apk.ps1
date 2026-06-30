@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 param(
-    [string]$ApiBaseUrl = "http://192.168.15.12:8080",
+    [string]$ApiBaseUrl = "https://smartfridge-backend-c27p.onrender.com",
     [switch]$Debug
 )
 
@@ -42,15 +42,15 @@ if ($javaMajorVersion -lt 17) {
 }
 
 if ([string]::IsNullOrWhiteSpace($ApiBaseUrl)) {
-    $ApiBaseUrl = Read-Host "Informe a URL da API (exemplo: http://192.168.15.12:8080)"
+    $ApiBaseUrl = Read-Host "Informe a URL da API (exemplo: https://smartfridge-backend-c27p.onrender.com)"
 }
 
 if ([string]::IsNullOrWhiteSpace($ApiBaseUrl)) {
     throw "A URL da API nao pode ficar vazia."
 }
 
-if (-not ($ApiBaseUrl -match '^http://')) {
-    throw "Use uma URL HTTP da sua rede local, por exemplo: http://192.168.15.12:8080"
+if (-not ($ApiBaseUrl -match '^https?://')) {
+    throw "Use uma URL absoluta HTTP(S), por exemplo: https://smartfridge-backend-c27p.onrender.com"
 }
 
 $mobileDir = Join-Path $PSScriptRoot "..\\mobile"
