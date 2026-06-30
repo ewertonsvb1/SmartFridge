@@ -29,3 +29,6 @@ releases/
 # Temporary files
 *.tmp
 *.bak
+
+android/key.properties
+android/app/release-key.jks
