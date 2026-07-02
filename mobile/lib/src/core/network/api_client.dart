@@ -12,7 +12,8 @@ class AuthFailureSessionGuard {
 
   Future<void> handle(DioException error) async {
     final statusCode = error.response?.statusCode;
-    final isProtectedRoute = !error.requestOptions.path.startsWith('/auth');
+    final isProtectedRoute =
+        !error.requestOptions.path.startsWith('/auth');
 
     if (!isProtectedRoute ||
         (statusCode != 401 && statusCode != 403) ||
@@ -21,6 +22,7 @@ class AuthFailureSessionGuard {
     }
 
     _invalidatingSession = true;
+
     await _tokenStorage.clearToken();
     _authSession.setAuthenticated(false);
   }
@@ -40,8 +42,11 @@ final dioFactoryProvider = Provider<Dio Function()>((_) {
 final dioProvider = Provider<Dio>((ref) {
   final tokenStorage = ref.watch(tokenStorageProvider);
   final authSession = ref.watch(authSessionProvider);
+
   final dio = ref.watch(dioFactoryProvider)();
+
   print('API URL: ${dio.options.baseUrl}');
+
   final authFailureSessionGuard = AuthFailureSessionGuard(
     tokenStorage,
     authSession,
@@ -50,37 +55,51 @@ final dioProvider = Provider<Dio>((ref) {
   dio.interceptors.add(
     InterceptorsWrapper(
       onRequest: (options, handler) async {
-        print('HTTP ${options.method} ${options.baseUrl}${options.path}');
-        if (options.path.startsWith('/auth')) {
-          handler.next(options);
-          return;
+        final token = await tokenStorage.readToken();
+
+        if (!options.path.startsWith('/auth') &&
+            token != null &&
+            token.isNotEmpty) {
+          options.headers['Authorization'] =
+              'Bearer $token';
         }
 
-        final token = await tokenStorage.readToken();
-        if (token != null && token.isNotEmpty) {
-          options.headers['Authorization'] = 'Bearer $token';
-        }
+        print('========================');
+        print('HTTP ${options.method}');
+        print('URL: ${options.baseUrl}${options.path}');
+        print('HEADERS: ${options.headers}');
+        print('BODY: ${options.data}');
+        print('========================');
+
         handler.next(options);
       },
+
+      onResponse: (response, handler) {
+        print('========================');
+        print('RESPOSTA');
+        print('STATUS: ${response.statusCode}');
+        print('URL: ${response.requestOptions.uri}');
+        print('DATA: ${response.data}');
+        print('========================');
+
+        handler.next(response);
+      },
+
       onError: (error, handler) async {
-        print(
-          'HTTP ERROR ${error.requestOptions.method} '
-          '${error.requestOptions.baseUrl}${error.requestOptions.path} '
-          'status=${error.response?.statusCode} message=${error.message}',
-        );
+        print('========================');
+        print('ERRO DIO');
+        print('URL: ${error.requestOptions.uri}');
+        print('STATUS: ${error.response?.statusCode}');
+        print('MESSAGE: ${error.message}');
+        print('DATA: ${error.response?.data}');
+        print('========================');
+
         await authFailureSessionGuard.handle(error);
+
         handler.next(error);
       },
     ),
   );
-  dio.interceptors.add(
-    LogInterceptor(
-      request: true,
-      requestBody: true,
-      responseBody: true,
-      responseHeader: false,
-      error: true,
-    ),
-  );
+
   return dio;
 });

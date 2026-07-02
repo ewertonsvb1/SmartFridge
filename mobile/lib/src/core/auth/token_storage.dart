@@ -20,31 +20,54 @@ class HybridTokenStorage implements TokenStorage {
 
   @override
   Future<String?> readToken() async {
-    if (kIsWeb) {
-      final prefs = await SharedPreferences.getInstance();
-      return prefs.getString(_tokenKey);
+    try {
+      if (kIsWeb) {
+        final prefs = await SharedPreferences.getInstance();
+        return prefs.getString(_tokenKey);
+      }
+
+      return await _secureStorage.read(
+        key: _tokenKey,
+      );
+    } catch (e) {
+      debugPrint('Token read error: $e');
+      return null;
     }
-    return _secureStorage.read(key: _tokenKey);
   }
 
   @override
   Future<void> writeToken(String token) async {
-    if (kIsWeb) {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_tokenKey, token);
-      return;
+    try {
+      if (kIsWeb) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(_tokenKey, token);
+        return;
+      }
+
+      await _secureStorage.write(
+        key: _tokenKey,
+        value: token,
+      );
+    } catch (e) {
+      debugPrint('Token write error: $e');
     }
-    await _secureStorage.write(key: _tokenKey, value: token);
   }
 
   @override
   Future<void> clearToken() async {
-    if (kIsWeb) {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove(_tokenKey);
-      return;
+    try {
+      if (kIsWeb) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove(_tokenKey);
+        return;
+      }
+
+      await _secureStorage.delete(
+        key: _tokenKey,
+      );
+    } catch (e) {
+      debugPrint('Token clear error: $e');
     }
-    await _secureStorage.delete(key: _tokenKey);
   }
 }
 
