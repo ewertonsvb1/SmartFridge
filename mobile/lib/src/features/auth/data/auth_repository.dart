@@ -9,22 +9,34 @@ class AuthRepository {
   final TokenStorage _tokenStorage;
 
   Future<void> login(String email, String password) async {
-    final response = await _dio.post('/auth/login', data: {
-      'email': email,
-      'password': password,
-    });
-    final token = response.data['token'] as String;
-    await _tokenStorage.writeToken(token);
+    try {
+      final response = await _dio.post('/auth/login', data: {
+        'email': email,
+        'password': password,
+      });
+      final token = response.data['token'] as String;
+      await _tokenStorage.writeToken(token);
+    } on DioException catch (e) {
+      print('ERRO DIO LOGIN: ${e.message}');
+      print('STATUS LOGIN: ${e.response?.statusCode}');
+      rethrow;
+    }
   }
 
   Future<void> register(String name, String email, String password) async {
-    final response = await _dio.post('/auth/register', data: {
-      'name': name,
-      'email': email,
-      'password': password,
-    });
-    final token = response.data['token'] as String;
-    await _tokenStorage.writeToken(token);
+    try {
+      final response = await _dio.post('/auth/register', data: {
+        'name': name,
+        'email': email,
+        'password': password,
+      });
+      final token = response.data['token'] as String;
+      await _tokenStorage.writeToken(token);
+    } on DioException catch (e) {
+      print('ERRO DIO REGISTRO: ${e.message}');
+      print('STATUS REGISTRO: ${e.response?.statusCode}');
+      rethrow;
+    }
   }
 
   Future<void> logout() async {
