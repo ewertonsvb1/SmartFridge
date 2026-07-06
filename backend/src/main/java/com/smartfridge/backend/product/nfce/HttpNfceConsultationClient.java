@@ -16,6 +16,8 @@ import org.springframework.web.client.RestClientException;
 @Slf4j
 public class HttpNfceConsultationClient implements NfceConsultationClient {
 
+    private static final int RESPONSE_PREVIEW_LIMIT = 300;
+
     private final RestClient restClient;
 
     public HttpNfceConsultationClient(RestClient.Builder builder) {
@@ -53,6 +55,11 @@ public class HttpNfceConsultationClient implements NfceConsultationClient {
             }
 
             if (isSecurityVerificationPage(body)) {
+                log.info("NFC-E SECURITY VALIDATION TRIGGERED");
+                log.info("NFC-E URL: {}", consultationUri);
+                log.info("NFC-E HTTP STATUS: {}", response.statusCode().value());
+                log.info("NFC-E RESPONSE HEADERS: {}", response.headers());
+                log.info("NFC-E RESPONSE PREVIEW: {}", preview(body));
                 throw new BusinessException("A consulta da NFC-e exige validacao de seguranca");
             }
 
@@ -74,6 +81,14 @@ public class HttpNfceConsultationClient implements NfceConsultationClient {
                 || normalized.contains("efetue a validacao de seguranca")
                 || normalized.contains("security verify")
                 || normalized.contains("securityverify.aspx");
+    }
+
+    private String preview(String body) {
+        String normalized = body.replaceAll("\\s+", " ").trim();
+        if (normalized.length() > RESPONSE_PREVIEW_LIMIT) {
+            return normalized.substring(0, RESPONSE_PREVIEW_LIMIT);
+        }
+        return normalized;
     }
 
     private record HttpResponseSnapshot(HttpStatusCode statusCode, HttpHeaders headers, String body) {
