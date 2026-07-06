@@ -65,6 +65,44 @@ class NfcePreviewParserTest {
     }
 
     @Test
+    void shouldParseEmissionDateFromHtmlLabel() {
+        String body = """
+                <html>
+                  <body>
+                    <div>Data de Emissao: 15/06/2026 10:30:00</div>
+                    <table>
+                      <tr data-description="Iogurte Natural" data-quantity="2"></tr>
+                    </table>
+                  </body>
+                </html>
+                """;
+
+        NfceParsedInvoice invoice = parser.parse("https://nfce.example/preview", body);
+
+        assertEquals(LocalDate.of(2026, 6, 15), invoice.emissionDate());
+        assertEquals("Iogurte Natural", invoice.items().get(0).description());
+    }
+
+    @Test
+    void shouldParseEmissionDateFromDataHoraLabel() {
+        String body = """
+                <html>
+                  <body>
+                    <span>Data/Hora: 15/06/2026 10:30:00</span>
+                    <table>
+                      <tr data-description="Cafe Torrado" data-quantity="1"></tr>
+                    </table>
+                  </body>
+                </html>
+                """;
+
+        NfceParsedInvoice invoice = parser.parse("https://nfce.example/preview", body);
+
+        assertEquals(LocalDate.of(2026, 6, 15), invoice.emissionDate());
+        assertEquals("Cafe Torrado", invoice.items().get(0).description());
+    }
+
+    @Test
     void shouldRejectDocumentsWithoutItems() {
         String body = """
                 <nota>

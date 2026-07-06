@@ -3,7 +3,10 @@ package com.smartfridge.backend.product.nfce;
 import com.smartfridge.backend.common.exception.BusinessException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -16,11 +19,27 @@ import org.springframework.web.util.HtmlUtils;
 @Slf4j
 public class NfcePreviewParser {
 
+    private static final String DATE_TOKEN_PATTERN = "((?:[0-9]{4}-[0-9]{2}-[0-9]{2})|(?:[0-9]{2}/[0-9]{2}/[0-9]{4}))";
     private static final Pattern ACCESS_KEY_TAG_PATTERN = Pattern.compile("(?i)<chNFe>\\s*([0-9]{44})\\s*</chNFe>");
     private static final Pattern ACCESS_KEY_PATTERN = Pattern.compile("(?i)(?:chNFe|accessKey|chave)[\"'=:\\s]*([0-9]{44})");
     private static final Pattern NOTE_NUMBER_PATTERN = Pattern.compile("(?i)(?:<nNF>\\s*([0-9]{1,9})\\s*</nNF>|(?:nNF|numero|number)[\"'=:\\s]*([0-9]{1,9}))");
-    private static final Pattern ISSUE_DATE_TAG_PATTERN = Pattern.compile("(?i)<time[^>]*class\\s*=\\s*\"[^\"]*issue-date[^\"]*\"[^>]*>\\s*([0-9]{4}-[0-9]{2}-[0-9]{2})\\s*</time>");
-    private static final Pattern EMISSION_DATE_PATTERN = Pattern.compile("(?i)(?:<dhEmi>\\s*([0-9]{4}-[0-9]{2}-[0-9]{2})[T\\s].*?</dhEmi>|(?:dhEmi|dataEmissao|emissionDate|issueDate)[\"'=:\\s]*([0-9]{4}-[0-9]{2}-[0-9]{2}))");
+    private static final Pattern XML_DHEMI_PATTERN = Pattern.compile(
+            "(?i)<dhEmi>\\s*(" + DATE_TOKEN_PATTERN + ")(?:[T\\s][^<]*)?</dhEmi>"
+    );
+    private static final Pattern ISSUE_DATE_TAG_PATTERN = Pattern.compile(
+            "(?i)<time[^>]*class\\s*=\\s*\"[^\"]*issue-date[^\"]*\"[^>]*>\\s*" + DATE_TOKEN_PATTERN + "\\s*</time>"
+    );
+    private static final List<Pattern> EMISSION_DATE_PATTERNS = Arrays.asList(
+            XML_DHEMI_PATTERN,
+            ISSUE_DATE_TAG_PATTERN,
+            Pattern.compile("(?i)(?:dhEmi|dataEmissao|emissionDate|issueDate)[\"'=:\\s]*" + DATE_TOKEN_PATTERN),
+            Pattern.compile("(?i)(?:emiss[aã]o|data\\s+de\\s+emiss[aã]o|data\\s+emissao|emiss[aã]o\\s+em)[^0-9]{0,40}" + DATE_TOKEN_PATTERN),
+            Pattern.compile("(?i)data\\s*/\\s*hora[^0-9]{0,40}" + DATE_TOKEN_PATTERN)
+    );
+    private static final List<DateTimeFormatter> DATE_FORMATTERS = List.of(
+            DateTimeFormatter.ISO_LOCAL_DATE,
+            DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    );
     private static final Pattern DET_BLOCK_PATTERN = Pattern.compile("(?is)<det[^>]*nItem\\s*=\\s*\"?(\\d+)\"?[^>]*>(.*?)</det>");
     private static final Pattern XML_DESCRIPTION_PATTERN = Pattern.compile("(?is)<(?:xProd|descricao)>(.*?)</(?:xProd|descricao)>");
     private static final Pattern XML_QUANTITY_PATTERN = Pattern.compile("(?is)<(?:qCom|qTrib|quantidade)>(.*?)</(?:qCom|qTrib|quantidade)>");
@@ -39,10 +58,9 @@ public class NfcePreviewParser {
                 accessKey = firstMatch(normalizedBody, ACCESS_KEY_PATTERN);
             }
             String noteNumber = firstMatch(normalizedBody, NOTE_NUMBER_PATTERN);
-            LocalDate emissionDate = parseDate(firstMatch(normalizedBody, EMISSION_DATE_PATTERN));
-            if (emissionDate == null) {
-                emissionDate = parseDate(firstMatch(normalizedBody, ISSUE_DATE_TAG_PATTERN));
-            }
+            String emissionDateCandidate = extractEmissionDateCandidate(normalizedBody);
+            log.info("NFC-E DATE CANDIDATE: {}", emissionDateCandidate);
+            LocalDate emissionDate = parseDate(emissionDateCandidate);
             List<NfceParsedInvoiceItem> items = extractItems(normalizedBody);
 
             if (emissionDate == null) {
@@ -140,11 +158,30 @@ public class NfcePreviewParser {
         return null;
     }
 
+    private String extractEmissionDateCandidate(String body) {
+        for (Pattern pattern : EMISSION_DATE_PATTERNS) {
+            String candidate = firstMatch(body, pattern);
+            if (candidate != null) {
+                return candidate;
+            }
+        }
+        return null;
+    }
+
     private LocalDate parseDate(String value) {
         if (value == null || value.isBlank()) {
             return null;
         }
-        return LocalDate.parse(value.trim());
+
+        String normalized = value.trim();
+        for (DateTimeFormatter formatter : DATE_FORMATTERS) {
+            try {
+                return LocalDate.parse(normalized, formatter);
+            } catch (DateTimeParseException ignored) {
+                // Try the next supported SEFAZ date layout.
+            }
+        }
+        return null;
     }
 
     private BigDecimal parseQuantity(String value) {
