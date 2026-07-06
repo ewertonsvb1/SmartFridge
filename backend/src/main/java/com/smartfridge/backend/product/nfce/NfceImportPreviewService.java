@@ -7,11 +7,13 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class NfceImportPreviewService {
 
     private final NfceQrCodeExtractor qrCodeExtractor;
@@ -22,6 +24,7 @@ public class NfceImportPreviewService {
     @Transactional(readOnly = true)
     public NfceImportPreviewResponse preview(NfceImportPreviewRequest request) {
         URI consultationUri = qrCodeExtractor.extract(request.qrCodePayload());
+        log.info("NFC-E URL EXTRAIDA: {}", consultationUri);
         String consultationBody = nfceConsultationClient.fetch(consultationUri);
         NfceParsedInvoice invoice = nfcePreviewParser.parse(consultationUri.toString(), consultationBody);
 

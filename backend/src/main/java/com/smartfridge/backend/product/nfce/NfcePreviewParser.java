@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.HtmlUtils;
 
 @Component
+@Slf4j
 public class NfcePreviewParser {
 
     private static final Pattern ACCESS_KEY_TAG_PATTERN = Pattern.compile("(?i)<chNFe>\\s*([0-9]{44})\\s*</chNFe>");
@@ -27,28 +29,36 @@ public class NfcePreviewParser {
     private static final Pattern ROW_DESCRIPTION_ATTRIBUTE_PATTERN = Pattern.compile("(?i)data-description\\s*=\\s*\"([^\"]+)\"");
     private static final Pattern ROW_QUANTITY_ATTRIBUTE_PATTERN = Pattern.compile("(?i)data-quantity\\s*=\\s*\"([^\"]+)\"");
     private static final Pattern NUMERIC_ROW_QUANTITY_PATTERN = Pattern.compile("^[0-9]+(?:[.,][0-9]+)?$");
+    private static final int HTML_PREVIEW_LIMIT = 300;
 
     public NfceParsedInvoice parse(String sourceUrl, String body) {
-        String normalizedBody = body == null ? "" : body;
-        String accessKey = firstMatch(normalizedBody, ACCESS_KEY_TAG_PATTERN);
-        if (accessKey == null) {
-            accessKey = firstMatch(normalizedBody, ACCESS_KEY_PATTERN);
-        }
-        String noteNumber = firstMatch(normalizedBody, NOTE_NUMBER_PATTERN);
-        LocalDate emissionDate = parseDate(firstMatch(normalizedBody, EMISSION_DATE_PATTERN));
-        if (emissionDate == null) {
-            emissionDate = parseDate(firstMatch(normalizedBody, ISSUE_DATE_TAG_PATTERN));
-        }
-        List<NfceParsedInvoiceItem> items = extractItems(normalizedBody);
+        try {
+            String normalizedBody = body == null ? "" : body;
+            String accessKey = firstMatch(normalizedBody, ACCESS_KEY_TAG_PATTERN);
+            if (accessKey == null) {
+                accessKey = firstMatch(normalizedBody, ACCESS_KEY_PATTERN);
+            }
+            String noteNumber = firstMatch(normalizedBody, NOTE_NUMBER_PATTERN);
+            LocalDate emissionDate = parseDate(firstMatch(normalizedBody, EMISSION_DATE_PATTERN));
+            if (emissionDate == null) {
+                emissionDate = parseDate(firstMatch(normalizedBody, ISSUE_DATE_TAG_PATTERN));
+            }
+            List<NfceParsedInvoiceItem> items = extractItems(normalizedBody);
 
-        if (emissionDate == null) {
-            throw new BusinessException("NFC-e emission date was not found");
-        }
-        if (items.isEmpty()) {
-            throw new BusinessException("NFC-e does not contain parseable items");
-        }
+            if (emissionDate == null) {
+                logHtmlPreview(normalizedBody);
+                throw new BusinessException("NFC-e emission date was not found");
+            }
+            if (items.isEmpty()) {
+                logHtmlPreview(normalizedBody);
+                throw new BusinessException("NFC-e does not contain parseable items");
+            }
 
-        return new NfceParsedInvoice(sourceUrl, accessKey, noteNumber, emissionDate, List.copyOf(items));
+            return new NfceParsedInvoice(sourceUrl, accessKey, noteNumber, emissionDate, List.copyOf(items));
+        } catch (RuntimeException ex) {
+            log.info("NFC-E PARSE ERROR: {}", ex.getMessage());
+            throw ex;
+        }
     }
 
     private List<NfceParsedInvoiceItem> extractItems(String body) {
@@ -166,5 +176,13 @@ public class NfcePreviewParser {
         text = text.replaceAll("(?is)<[^>]+>", " ");
         text = text.replace('\u00A0', ' ');
         return text.replaceAll("\\s+", " ").trim();
+    }
+
+    private void logHtmlPreview(String body) {
+        String preview = cleanText(body);
+        if (preview.length() > HTML_PREVIEW_LIMIT) {
+            preview = preview.substring(0, HTML_PREVIEW_LIMIT);
+        }
+        log.info("NFC-E HTML PREVIEW: {}", preview);
     }
 }

@@ -1,13 +1,19 @@
 package com.smartfridge.backend.product.nfce;
 
 import com.smartfridge.backend.common.exception.BusinessException;
-import java.text.Normalizer;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.text.Normalizer;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
 @Component
+@Slf4j
 public class HttpNfceConsultationClient implements NfceConsultationClient {
 
     private final RestClient restClient;
@@ -19,10 +25,28 @@ public class HttpNfceConsultationClient implements NfceConsultationClient {
     @Override
     public String fetch(URI consultationUri) {
         try {
-            String body = restClient.get()
+            log.info("NFC-E CONSULTANDO URL: {}", consultationUri);
+
+            HttpResponseSnapshot response = restClient.get()
                     .uri(consultationUri)
-                    .retrieve()
-                    .body(String.class);
+                    .exchange((request, clientResponse) -> {
+                        HttpStatusCode statusCode = clientResponse.getStatusCode();
+                        HttpHeaders headers = clientResponse.getHeaders();
+                        MediaType contentType = headers.getContentType();
+                        String body = new String(clientResponse.getBody().readAllBytes(), StandardCharsets.UTF_8);
+                        String redirectTarget = headers.getFirst(HttpHeaders.LOCATION);
+
+                        log.info("NFC-E STATUS: {}", statusCode.value());
+                        log.info("NFC-E CONTENT-TYPE: {}", contentType);
+                        log.info("NFC-E RESPONSE SIZE: {}", body.length());
+                        if (redirectTarget != null && !redirectTarget.isBlank()) {
+                            log.info("NFC-E REDIRECT: {}", redirectTarget);
+                        }
+
+                        return new HttpResponseSnapshot(statusCode, headers, body);
+                    });
+
+            String body = response.body();
 
             if (body == null || body.isBlank()) {
                 throw new BusinessException("NFC-e consultation returned an empty response");
@@ -50,5 +74,8 @@ public class HttpNfceConsultationClient implements NfceConsultationClient {
                 || normalized.contains("efetue a validacao de seguranca")
                 || normalized.contains("security verify")
                 || normalized.contains("securityverify.aspx");
+    }
+
+    private record HttpResponseSnapshot(HttpStatusCode statusCode, HttpHeaders headers, String body) {
     }
 }
