@@ -12,33 +12,61 @@ class NfceQrCodeExtractorTest {
     private final NfceQrCodeExtractor extractor = new NfceQrCodeExtractor();
 
     @Test
-    void shouldReturnDirectUrl() {
-        URI uri = extractor.extract("https://nfce.example/preview");
+    void shouldExtractPureUrl() {
+        URI uri = extractor.extract("https://www.sefaz.rs.gov.br/NFCE/NFCE-COM.aspx?p=123");
 
-        assertEquals("https://nfce.example/preview", uri.toString());
+        assertEquals("https://www.sefaz.rs.gov.br/NFCE/NFCE-COM.aspx?p=123", uri.toString());
     }
 
     @Test
-    void shouldExtractUrlFromEncodedPayload() {
-        URI uri = extractor.extract("p=https%3A%2F%2Fnfce.example%2Fpreview%3FchNFe%3D123");
+    void shouldExtractUrlWithUrlPrefix() {
+        URI uri = extractor.extract("URL: https://www.sefaz.rs.gov.br/NFCE/NFCE-COM.aspx?p=123");
 
-        assertEquals("https://nfce.example/preview?chNFe=123", uri.toString());
+        assertEquals("https://www.sefaz.rs.gov.br/NFCE/NFCE-COM.aspx?p=123", uri.toString());
     }
 
     @Test
-    void shouldExtractUrlWithPipeSeparatedNfcePayload() {
+    void shouldExtractUrlWithQrCodePrefixAndLineBreak() {
+        URI uri = extractor.extract("QR Code:\nhttps://www.sefaz.rs.gov.br/NFCE/NFCE-COM.aspx?p=123");
+
+        assertEquals("https://www.sefaz.rs.gov.br/NFCE/NFCE-COM.aspx?p=123", uri.toString());
+    }
+
+    @Test
+    void shouldExtractUrlFromMixedText() {
         URI uri = extractor.extract(
-                "https://sat.sef.sc.gov.br/nfce/consulta?p=42240203821728000172650070000318811000319318|2|1|1|79BCB6C4DDFB13D9BA0D1F84D96F9B6B3E8382EA"
+                "Leitura concluida https://www.sefaz.rs.gov.br/NFCE/NFCE-COM.aspx?p=123 CONSUMIDOR NAO IDENTIFICADO"
+        );
+
+        assertEquals("https://www.sefaz.rs.gov.br/NFCE/NFCE-COM.aspx?p=123", uri.toString());
+    }
+
+    @Test
+    void shouldExtractEncodedUrlFromPayload() {
+        URI uri = extractor.extract("https%3A%2F%2Fwww.sefaz.rs.gov.br%2FNFCE%2FNFCE-COM.aspx%3Fp%3D123");
+
+        assertEquals("https://www.sefaz.rs.gov.br/NFCE/NFCE-COM.aspx?p=123", uri.toString());
+    }
+
+    @Test
+    void shouldExtractUrlWithPipeSeparatedPayload() {
+        URI uri = extractor.extract(
+                "https://www.sefaz.rs.gov.br/NFCE/NFCE-COM.aspx?p=123|2|1|ABC"
         );
 
         assertEquals(
-                "https://sat.sef.sc.gov.br/nfce/consulta?p=42240203821728000172650070000318811000319318%7C2%7C1%7C1%7C79BCB6C4DDFB13D9BA0D1F84D96F9B6B3E8382EA",
+                "https://www.sefaz.rs.gov.br/NFCE/NFCE-COM.aspx?p=123%7C2%7C1%7CABC",
                 uri.toString()
         );
     }
 
     @Test
-    void shouldRejectInvalidPayload() {
+    void shouldRejectEmptyPayload() {
+        assertThrows(BusinessException.class, () -> extractor.extract("   \n  "));
+    }
+
+    @Test
+    void shouldRejectPayloadWithoutUrl() {
         assertThrows(BusinessException.class, () -> extractor.extract("sem-url"));
     }
 }

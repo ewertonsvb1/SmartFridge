@@ -6,65 +6,108 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class NfceQrCodeExtractor {
 
-    private static final Pattern URL_PATTERN = Pattern.compile("https?://[^\\s\"'<>]+", Pattern.CASE_INSENSITIVE);
+    private static final Pattern PREFIX_PATTERN = Pattern.compile(
+            "^(?:(?:url|qrcode|qr\\s*code|link)\\s*:\\s*)+",
+            Pattern.CASE_INSENSITIVE
+    );
+    private static final Pattern MULTIPLE_SPACES_PATTERN = Pattern.compile("\\s+");
+    private static final Pattern URL_PATTERN = Pattern.compile("(https?://[^\\s]+)", Pattern.CASE_INSENSITIVE);
 
     public URI extract(String rawPayload) {
-        String normalized = rawPayload == null ? "" : rawPayload.trim();
+        log.info("NFC-E RAW: {}", rawPayload);
+
+        String normalized = normalizePayload(rawPayload);
+        log.info("NFC-E NORMALIZED: {}", normalized);
+
         if (normalized.isBlank()) {
             throw new BusinessException("QR Code payload is required");
         }
 
-        URI direct = tryCreateHttpUri(normalized);
-        if (direct != null) {
-            return direct;
+        URI extracted = extractFromText(normalized);
+        if (extracted == null) {
+            String decoded = normalizePayload(decodeValue(normalized));
+            extracted = extractFromText(decoded);
         }
 
-        String decoded = URLDecoder.decode(normalized, StandardCharsets.UTF_8);
-        URI decodedUri = tryCreateHttpUri(decoded);
-        if (decodedUri != null) {
-            return decodedUri;
+        if (extracted == null) {
+            throw new BusinessException("Invalid NFC-e QR Code");
         }
 
-        Matcher matcher = URL_PATTERN.matcher(decoded);
-        if (matcher.find()) {
-            URI matched = tryCreateHttpUri(matcher.group());
+        log.info("NFC-E EXTRACTED URL: {}", extracted);
+        return extracted;
+    }
+
+    private String normalizePayload(String value) {
+        if (value == null) {
+            return "";
+        }
+
+        String normalized = value
+                .trim()
+                .replace('\r', ' ')
+                .replace('\n', ' ');
+        normalized = MULTIPLE_SPACES_PATTERN.matcher(normalized).replaceAll(" ").trim();
+        return PREFIX_PATTERN.matcher(normalized).replaceFirst("").trim();
+    }
+
+    private String decodeValue(String value) {
+        try {
+            return URLDecoder.decode(value, StandardCharsets.UTF_8);
+        } catch (IllegalArgumentException ex) {
+            return value;
+        }
+    }
+
+    private URI extractFromText(String text) {
+        Matcher matcher = URL_PATTERN.matcher(text);
+        while (matcher.find()) {
+            URI matched = tryCreateHttpUri(matcher.group(1));
             if (matched != null) {
                 return matched;
             }
         }
-
-        throw new BusinessException("Invalid NFC-e QR Code");
+        return null;
     }
 
     private URI tryCreateHttpUri(String value) {
+        String sanitized = sanitizeUrlCandidate(value);
         try {
-            URI uri = URI.create(value);
-            if (uri.getScheme() == null) {
-                return null;
-            }
-            if (!"http".equalsIgnoreCase(uri.getScheme()) && !"https".equalsIgnoreCase(uri.getScheme())) {
-                return null;
-            }
-            return uri;
+            return createHttpUri(sanitized);
         } catch (IllegalArgumentException ex) {
-            String sanitized = value.replace("|", "%7C");
             try {
-                URI uri = URI.create(sanitized);
-                if (uri.getScheme() == null) {
-                    return null;
-                }
-                if (!"http".equalsIgnoreCase(uri.getScheme()) && !"https".equalsIgnoreCase(uri.getScheme())) {
-                    return null;
-                }
-                return uri;
+                return createHttpUri(sanitizeUrlCandidate(decodeValue(sanitized)));
             } catch (IllegalArgumentException ignored) {
                 return null;
             }
         }
+    }
+
+    private String sanitizeUrlCandidate(String value) {
+        return value
+                .trim()
+                .replace("|", "%7C")
+                .replace(" ", "%20")
+                .replace("\"", "")
+                .replace("'", "")
+                .replace("<", "")
+                .replace(">", "");
+    }
+
+    private URI createHttpUri(String value) {
+        URI uri = URI.create(value);
+        if (uri.getScheme() == null) {
+            throw new IllegalArgumentException("URI without scheme");
+        }
+        if (!"http".equalsIgnoreCase(uri.getScheme()) && !"https".equalsIgnoreCase(uri.getScheme())) {
+            throw new IllegalArgumentException("Unsupported URI scheme");
+        }
+        return uri;
     }
 }
