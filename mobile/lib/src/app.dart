@@ -14,7 +14,6 @@ import 'package:smartfridge_mobile/src/features/house_bills/presentation/house_b
 import 'package:smartfridge_mobile/src/features/house_bills/presentation/house_bills_page.dart';
 import 'package:smartfridge_mobile/src/features/product/data/product_repository.dart';
 import 'package:smartfridge_mobile/src/features/product/presentation/product_form_page.dart';
-import 'package:smartfridge_mobile/src/features/product/presentation/product_nfce_import_page.dart';
 
 final _routerProvider = Provider<GoRouter>((ref) {
   final session = ref.watch(authSessionProvider);
@@ -77,10 +76,6 @@ final _routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(path: '/fridge', builder: (_, __) => const HomePage()),
-      GoRoute(
-        path: '/product/import',
-        builder: (_, __) => const ProductNfceImportPage(),
-      ),
       GoRoute(
           path: '/product/new', builder: (_, __) => const ProductFormPage()),
       GoRoute(

@@ -105,6 +105,10 @@ void main() {
       'SmartHouseApp should refresh fridge count on home hub after creating a product',
       (WidgetTester tester) async {
     final api = _FridgeCountsApiMock();
+    final now = DateTime.now();
+    final manufactureDate = DateTime(now.year, now.month, now.day)
+        .subtract(const Duration(days: 2));
+    final expirationDate = manufactureDate.add(const Duration(days: 10));
     _setLargeViewport(tester);
 
     await tester.pumpWidget(
@@ -130,16 +134,18 @@ void main() {
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byType(TextFormField).at(0), 'Iogurte');
-    await tester.enterText(find.byType(TextFormField).at(1), '2');
+    await tester.enterText(find.byKey(const ValueKey('product-name-field')), 'Iogurte');
+    await tester.enterText(find.byKey(const ValueKey('product-quantity-field')), '2');
 
-    final manufactureField =
-        tester.widget<TextFormField>(find.byType(TextFormField).at(2));
-    manufactureField.controller!.text = '2026-06-01';
+    final manufactureField = tester.widget<TextFormField>(
+      find.byKey(const ValueKey('product-manufacture-field')),
+    );
+    manufactureField.controller!.text = _formatIsoDate(manufactureDate);
 
-    final expirationField =
-        tester.widget<TextFormField>(find.byType(TextFormField).at(3));
-    expirationField.controller!.text = '2026-06-30';
+    final expirationField = tester.widget<TextFormField>(
+      find.byKey(const ValueKey('product-expiration-field')),
+    );
+    expirationField.controller!.text = _formatIsoDate(expirationDate);
 
     await tester.pump();
     await tester.tap(find.widgetWithText(FilledButton, 'Salvar'));
@@ -172,6 +178,12 @@ void _setLargeViewport(WidgetTester tester) {
   tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
+}
+
+String _formatIsoDate(DateTime date) {
+  final month = date.month.toString().padLeft(2, '0');
+  final day = date.day.toString().padLeft(2, '0');
+  return '${date.year}-$month-$day';
 }
 
 Dio _buildMockDio() {
@@ -227,6 +239,31 @@ Dio _buildMockDio() {
               requestOptions: options,
               data: {
                 'content': <Map<String, dynamic>>[],
+              },
+            ),
+          );
+          return;
+        }
+
+        if (options.path == '/products/catalog/search') {
+          handler.resolve(
+            Response(
+              requestOptions: options,
+              data: <Map<String, dynamic>>[],
+            ),
+          );
+          return;
+        }
+
+        if (options.path.startsWith('/products/catalog/barcode/')) {
+          handler.resolve(
+            Response(
+              requestOptions: options,
+              statusCode: 404,
+              data: {
+                'status': 404,
+                'message': 'Barcode not found',
+                'timestamp': DateTime.now().toIso8601String(),
               },
             ),
           );
@@ -315,6 +352,31 @@ class _FridgeCountsApiMock {
               Response(
                 requestOptions: options,
                 data: _products.last,
+              ),
+            );
+            return;
+          }
+
+          if (options.path == '/products/catalog/search') {
+            handler.resolve(
+              Response(
+                requestOptions: options,
+                data: <Map<String, dynamic>>[],
+              ),
+            );
+            return;
+          }
+
+          if (options.path.startsWith('/products/catalog/barcode/')) {
+            handler.resolve(
+              Response(
+                requestOptions: options,
+                statusCode: 404,
+                data: {
+                  'status': 404,
+                  'message': 'Barcode not found',
+                  'timestamp': DateTime.now().toIso8601String(),
+                },
               ),
             );
             return;

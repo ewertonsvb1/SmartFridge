@@ -31,91 +31,52 @@ class ProductModel {
   }
 }
 
-class NfceImportPreviewItemModel {
-  NfceImportPreviewItemModel({
-    required this.lineNumber,
-    required this.description,
-    required this.quantity,
-    required this.suggestedManufactureDate,
-    required this.suggestedExpirationDate,
-    required this.suggestedShelfLifeDays,
-    required this.shelfLifeRuleCode,
-    required this.manualReviewRequired,
-  });
-
-  final int lineNumber;
-  final num quantity;
-  final String description;
-  final String? suggestedManufactureDate;
-  final String? suggestedExpirationDate;
-  final int? suggestedShelfLifeDays;
-  final String? shelfLifeRuleCode;
-  final bool manualReviewRequired;
-
-  factory NfceImportPreviewItemModel.fromJson(Map<String, dynamic> json) {
-    return NfceImportPreviewItemModel(
-      lineNumber: json['lineNumber'] as int,
-      description: json['description'] as String,
-      quantity: json['quantity'] as num,
-      suggestedManufactureDate: json['suggestedManufactureDate'] as String?,
-      suggestedExpirationDate: json['suggestedExpirationDate'] as String?,
-      suggestedShelfLifeDays: json['suggestedShelfLifeDays'] as int?,
-      shelfLifeRuleCode: json['shelfLifeRuleCode'] as String?,
-      manualReviewRequired: json['manualReviewRequired'] as bool? ?? false,
-    );
-  }
-}
-
-class NfceImportPreviewModel {
-  NfceImportPreviewModel({
-    required this.sourceUrl,
-    required this.accessKey,
-    required this.noteNumber,
-    required this.emissionDate,
-    required this.items,
-  });
-
-  final String sourceUrl;
-  final String? accessKey;
-  final String? noteNumber;
-  final String emissionDate;
-  final List<NfceImportPreviewItemModel> items;
-
-  factory NfceImportPreviewModel.fromJson(Map<String, dynamic> json) {
-    final rawItems = (json['items'] as List<dynamic>? ?? <dynamic>[]);
-    return NfceImportPreviewModel(
-      sourceUrl: json['sourceUrl'] as String? ?? '',
-      accessKey: json['accessKey'] as String?,
-      noteNumber: json['noteNumber'] as String?,
-      emissionDate: json['emissionDate'] as String,
-      items: rawItems
-          .map((item) =>
-              NfceImportPreviewItemModel.fromJson(item as Map<String, dynamic>))
-          .toList(),
-    );
-  }
-}
-
-class NfceImportConfirmItemInput {
-  NfceImportConfirmItemInput({
+class CatalogProductSuggestionModel {
+  CatalogProductSuggestionModel({
+    required this.id,
     required this.name,
-    required this.quantity,
-    required this.manufactureDate,
-    required this.expirationDate,
   });
 
+  final int id;
   final String name;
-  final int quantity;
-  final String manufactureDate;
-  final String expirationDate;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'quantity': quantity,
-      'manufactureDate': manufactureDate,
-      'expirationDate': expirationDate,
-    };
+  factory CatalogProductSuggestionModel.fromJson(Map<String, dynamic> json) {
+    return CatalogProductSuggestionModel(
+      id: json['id'] as int,
+      name: json['name'] as String,
+    );
+  }
+}
+
+class CatalogProductDetailModel {
+  CatalogProductDetailModel({
+    required this.id,
+    required this.name,
+    required this.brand,
+    required this.category,
+    required this.defaultUnit,
+    required this.defaultQuantity,
+    required this.barcode,
+  });
+
+  final int id;
+  final String name;
+  final String? brand;
+  final String? category;
+  final String? defaultUnit;
+  final int? defaultQuantity;
+  final String? barcode;
+
+  factory CatalogProductDetailModel.fromJson(Map<String, dynamic> json) {
+    return CatalogProductDetailModel(
+      id: json['id'] as int,
+      name: json['name'] as String,
+      brand: json['brand'] as String?,
+      category: json['category'] as String?,
+      defaultUnit: json['defaultUnit'] as String?,
+      defaultQuantity: json['defaultQuantity'] as int?,
+      barcode: json['barcode'] as String?,
+    );
   }
 }
 
@@ -145,12 +106,22 @@ class ProductRepository {
     required int quantity,
     required String manufactureDate,
     required String expirationDate,
+    String? brand,
+    String? category,
+    String? defaultUnit,
+    int? defaultQuantity,
+    String? barcode,
   }) async {
     await _dio.post('/products', data: {
       'name': name,
       'quantity': quantity,
       'manufactureDate': manufactureDate,
       'expirationDate': expirationDate,
+      'brand': brand,
+      'category': category,
+      'defaultUnit': defaultUnit,
+      'defaultQuantity': defaultQuantity,
+      'barcode': barcode,
     });
   }
 
@@ -173,30 +144,40 @@ class ProductRepository {
     await _dio.delete('/products/$id');
   }
 
-  Future<NfceImportPreviewModel> previewNfceImport(String qrCodePayload) async {
-    final response = await _dio.post('/products/nfce/preview', data: {
-      'qrCodePayload': qrCodePayload,
-    });
-
-    return NfceImportPreviewModel.fromJson(
-      Map<String, dynamic>.from(response.data as Map<String, dynamic>),
+  Future<List<CatalogProductSuggestionModel>> searchCatalog(String query) async {
+    final response = await _dio.get(
+      '/products/catalog/search',
+      queryParameters: {'q': query},
     );
+    final data = response.data as List<dynamic>? ?? <dynamic>[];
+    return data
+        .map(
+          (item) => CatalogProductSuggestionModel.fromJson(
+            Map<String, dynamic>.from(item as Map),
+          ),
+        )
+        .toList();
   }
 
-  Future<List<ProductModel>> confirmNfceImport(
-    List<NfceImportConfirmItemInput> items,
-  ) async {
-    final response = await _dio.post('/products/nfce/confirm', data: {
-      'items': items.map((item) => item.toJson()).toList(),
-    });
+  Future<CatalogProductSuggestionModel?> findCatalogByBarcode(String barcode) async {
+    try {
+      final response = await _dio.get('/products/catalog/barcode/$barcode');
+      return CatalogProductSuggestionModel.fromJson(
+        Map<String, dynamic>.from(response.data as Map),
+      );
+    } on DioException catch (exception) {
+      if (exception.response?.statusCode == 404) {
+        return null;
+      }
+      rethrow;
+    }
+  }
 
-    final data =
-        Map<String, dynamic>.from(response.data as Map<String, dynamic>);
-    final rawProducts = (data['products'] as List<dynamic>? ?? <dynamic>[]);
-    return rawProducts
-        .map(
-            (product) => ProductModel.fromJson(product as Map<String, dynamic>))
-        .toList();
+  Future<CatalogProductDetailModel> getCatalogById(int id) async {
+    final response = await _dio.get('/products/catalog/$id');
+    return CatalogProductDetailModel.fromJson(
+      Map<String, dynamic>.from(response.data as Map),
+    );
   }
 }
 

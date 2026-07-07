@@ -4,6 +4,7 @@ import com.smartfridge.backend.common.exception.BusinessException;
 import com.smartfridge.backend.common.exception.ResourceNotFoundException;
 import com.smartfridge.backend.notification.NotificationLogService;
 import com.smartfridge.backend.notification.NotificationType;
+import com.smartfridge.backend.product.catalog.CatalogSyncService;
 import com.smartfridge.backend.product.dto.ProductCreateRequest;
 import com.smartfridge.backend.product.dto.ProductDashboardResponse;
 import com.smartfridge.backend.product.dto.ProductUpdateRequest;
@@ -28,6 +29,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final AuthenticatedUserService authenticatedUserService;
     private final NotificationLogService notificationLogService;
+    private final CatalogSyncService catalogSyncService;
 
     @Transactional
     public ProductEntity create(ProductCreateRequest request) {
@@ -43,6 +45,13 @@ public class ProductService {
         entity.setStatus(calculateStatus(request.expirationDate()));
 
         ProductEntity saved = productRepository.save(entity);
+        catalogSyncService.ensureExists(
+                request.name(),
+                request.brand(),
+                request.category(),
+                request.defaultUnit(),
+                request.defaultQuantity(),
+                request.barcode());
         createNotificationIfNeeded(saved);
         return saved;
     }

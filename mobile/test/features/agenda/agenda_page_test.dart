@@ -168,6 +168,8 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, 'Abrir').at(1));
     await tester.pumpAndSettle();
 
+    await _goToMonth(tester, DateTime(2026, 6));
+
     const eventDayKey = ValueKey('agenda-day-2026-06-12');
 
     expect(find.byKey(eventDayKey), findsOneWidget);
@@ -185,6 +187,20 @@ void main() {
     expect(find.text('Evento visual 12/06'), findsOneWidget);
     expect(find.text('Dia 12 com destaque'), findsOneWidget);
   });
+}
+
+Future<void> _goToMonth(WidgetTester tester, DateTime targetMonth) async {
+  final currentMonth = DateTime.now();
+  final monthDelta = (targetMonth.year - currentMonth.year) * 12 +
+      (targetMonth.month - currentMonth.month);
+  final icon = monthDelta < 0
+      ? Icons.chevron_left_rounded
+      : Icons.chevron_right_rounded;
+
+  for (var index = 0; index < monthDelta.abs(); index++) {
+    await tester.tap(find.byIcon(icon));
+    await tester.pumpAndSettle();
+  }
 }
 
 class _FakeTokenStorage implements TokenStorage {
@@ -339,6 +355,31 @@ class _AgendaApiMock {
                 requestOptions: options,
                 data: {
                   'content': <Map<String, dynamic>>[],
+                },
+              ),
+            );
+            return;
+          }
+
+          if (options.path == '/products/catalog/search') {
+            handler.resolve(
+              Response(
+                requestOptions: options,
+                data: <Map<String, dynamic>>[],
+              ),
+            );
+            return;
+          }
+
+          if (options.path.startsWith('/products/catalog/barcode/')) {
+            handler.resolve(
+              Response(
+                requestOptions: options,
+                statusCode: 404,
+                data: {
+                  'status': 404,
+                  'message': 'Barcode not found',
+                  'timestamp': DateTime.now().toIso8601String(),
                 },
               ),
             );

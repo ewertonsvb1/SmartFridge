@@ -135,10 +135,6 @@ flutter run --dart-define=API_BASE_URL=https://smartfridge-backend-c27p.onrender
 
 Se voce realmente precisar testar contra um backend local, passe uma URL absoluta manualmente por `API_BASE_URL`.
 
-Observacao importante:
-
-- a leitura de QR Code no Android usa permissao de camera declarada no manifesto
-
 ### Configuração do App - Android
 
 1. **Nome do app**: Edite `mobile/android/app/src/main/res/values/strings.xml`
@@ -322,6 +318,8 @@ cd backend && mvn spring-boot:run & cd ../mobile && flutter pub get && flutter r
 - Auth: /auth/register e /auth/login
 - User: /users/me
 - Product: CRUD, /expired, /expiring, /dashboard
+- Product Catalog: sincronizacao automatica no create, autocomplete autenticado em `/products/catalog/search` e detalhamento em `/products/catalog/{id}`
+- Product Barcode Lookup: busca autenticada em `/products/catalog/barcode/{barcode}`, associacao permanente ao catalogo e reaproveitamento de metadados do produto conhecido
 - Shopping List: CRUD
 - Scheduler diário para recálculo de status e geração de notification log sem duplicidade diária
 - Erros globais com status, message e timestamp

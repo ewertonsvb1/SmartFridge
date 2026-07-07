@@ -33,16 +33,17 @@ class DatabaseMigrationTest {
         assertThat(tableExists(jdbcTemplate, "flyway_schema_history")).isTrue();
         assertThat(tableExists(jdbcTemplate, "USERS")).isTrue();
         assertThat(tableExists(jdbcTemplate, "PRODUCTS")).isTrue();
+        assertThat(tableExists(jdbcTemplate, "CATALOG_PRODUCTS")).isTrue();
         assertThat(tableExists(jdbcTemplate, "SHOPPING_LIST_ITEMS")).isTrue();
         assertThat(tableExists(jdbcTemplate, "NOTIFICATION_LOGS")).isTrue();
         assertThat(tableExists(jdbcTemplate, "AGENDA_EVENTS")).isTrue();
         assertThat(tableExists(jdbcTemplate, "HOUSE_BILLS")).isTrue();
 
         Integer appliedVersions = jdbcTemplate.queryForObject(
-                "select count(*) from \"flyway_schema_history\" where \"success\" = true and \"version\" = '1'",
+                "select count(*) from \"flyway_schema_history\" where \"success\" = true and \"version\" in ('1', '2', '3', '4')",
                 Integer.class);
 
-        assertThat(appliedVersions).isEqualTo(1);
+        assertThat(appliedVersions).isEqualTo(4);
     }
 
     private boolean tableExists(JdbcTemplate jdbcTemplate, String tableName) {

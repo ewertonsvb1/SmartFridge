@@ -43,7 +43,6 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/auth/**",
                                 "/h2-console/**",
-                                "/dev/nfce-fixture/**",
                                 "/actuator/health/**",
                                 "/actuator/info")
                         .permitAll()

@@ -10,6 +10,7 @@ class ProductServiceTest {
     private final ProductService productService = new ProductService(
             null,
             null,
+            null,
             null
     );
 

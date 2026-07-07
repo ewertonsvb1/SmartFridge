@@ -106,10 +106,8 @@ O código está perto do ponto de deploy. O que falta agora é principalmente ex
   - `flutter build apk --release ...` verde
   - instalação e login funcionando no device
 - Risco residual atual:
-  - `flutter test` ainda falha no baseline em `mobile/test/features/product/nfce_import_page_test.dart`
 
 ## Assumptions
 - Vamos usar Render para o backend HTTP.
 - Vamos usar conexão PostgreSQL direta do Supabase com `sslmode=require`.
 - O deploy inicial não depende de automação de Play Store.
-- A falha atual do teste de NFC-e será tratada como pendência paralela, não bloqueio absoluto para publicar backend e gerar release Android.
