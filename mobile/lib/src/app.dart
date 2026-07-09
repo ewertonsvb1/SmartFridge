@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smartfridge_mobile/src/core/auth/auth_session.dart';
+import 'package:smartfridge_mobile/src/core/notification/notification_background.dart';
+import 'package:smartfridge_mobile/src/core/notification/notification_sync_service.dart';
 import 'package:smartfridge_mobile/src/features/agenda/data/agenda_repository.dart';
 import 'package:smartfridge_mobile/src/features/agenda/presentation/agenda_form_page.dart';
 import 'package:smartfridge_mobile/src/features/agenda/presentation/agenda_page.dart';
@@ -12,8 +16,10 @@ import 'package:smartfridge_mobile/src/features/home/presentation/home_page.dart
 import 'package:smartfridge_mobile/src/features/house_bills/data/house_bills_repository.dart';
 import 'package:smartfridge_mobile/src/features/house_bills/presentation/house_bill_form_page.dart';
 import 'package:smartfridge_mobile/src/features/house_bills/presentation/house_bills_page.dart';
+import 'package:smartfridge_mobile/src/features/notification/data/notification_repository.dart';
 import 'package:smartfridge_mobile/src/features/product/data/product_repository.dart';
 import 'package:smartfridge_mobile/src/features/product/presentation/product_form_page.dart';
+import 'package:workmanager/workmanager.dart';
 
 final _routerProvider = Provider<GoRouter>((ref) {
   final session = ref.watch(authSessionProvider);
@@ -145,11 +151,77 @@ class _SplashPage extends StatelessWidget {
   }
 }
 
-class SmartHouseApp extends ConsumerWidget {
+class SmartHouseApp extends ConsumerStatefulWidget {
   const SmartHouseApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SmartHouseApp> createState() => _SmartHouseAppState();
+}
+
+class _SmartHouseAppState extends ConsumerState<SmartHouseApp>
+    with WidgetsBindingObserver {
+  ProviderSubscription<AuthSession>? _authSessionSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _authSessionSubscription = ref.listenManual<AuthSession>(
+      authSessionProvider,
+      (_, next) => unawaited(_handleNotificationState(next)),
+    );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(_handleNotificationState(ref.read(authSessionProvider)));
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _authSessionSubscription?.close();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      unawaited(_syncNotificationsIfAuthenticated());
+    }
+  }
+
+  Future<void> _handleNotificationState(AuthSession session) async {
+    if (isWidgetTestEnvironment()) {
+      return;
+    }
+
+    if (!session.authenticated) {
+      await Workmanager().cancelAll();
+      return;
+    }
+
+    await ref.read(notificationSyncServiceProvider).activate();
+    await Workmanager().registerPeriodicTask(
+      notificationSyncTaskUniqueName,
+      notificationSyncTaskName,
+      frequency: const Duration(minutes: 15),
+      existingWorkPolicy: ExistingWorkPolicy.keep,
+      constraints: Constraints(networkType: NetworkType.connected),
+    );
+    await _syncNotificationsIfAuthenticated();
+  }
+
+  Future<void> _syncNotificationsIfAuthenticated() async {
+    if (!ref.read(authSessionProvider).authenticated || isWidgetTestEnvironment()) {
+      return;
+    }
+
+    await ref.read(notificationSyncServiceProvider).syncNewNotifications();
+    ref.invalidate(notificationsProvider);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final router = ref.watch(_routerProvider);
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,

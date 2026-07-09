@@ -58,9 +58,16 @@ class NotificationRepository {
 
   final Dio _dio;
 
-  Future<List<NotificationItem>> list({int limit = 20}) async {
-    final response =
-        await _dio.get('/notifications', queryParameters: {'limit': limit});
+  Future<List<NotificationItem>> list({int limit = 20, int? afterId}) async {
+    final queryParameters = <String, dynamic>{'limit': limit};
+    if (afterId != null) {
+      queryParameters['afterId'] = afterId;
+    }
+
+    final response = await _dio.get(
+      '/notifications',
+      queryParameters: queryParameters,
+    );
     final list = (response.data as List<dynamic>?) ?? <dynamic>[];
     return list
         .map((e) => NotificationItem.fromJson(e as Map<String, dynamic>))

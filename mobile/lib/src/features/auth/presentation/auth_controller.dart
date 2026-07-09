@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smartfridge_mobile/src/core/auth/auth_session.dart';
+import 'package:smartfridge_mobile/src/core/notification/notification_sync_service.dart';
 import 'package:smartfridge_mobile/src/features/auth/data/auth_repository.dart';
 import 'package:smartfridge_mobile/src/features/dashboard/presentation/dashboard_controller.dart';
 
@@ -35,6 +36,7 @@ class AuthController extends StateNotifier<AsyncValue<void>> {
 
   Future<void> logout() async {
     await _repository.logout();
+    await _ref.read(notificationSyncServiceProvider).clearSessionState();
     _ref.invalidate(globalDashboardProvider);
     _ref.read(authSessionProvider).setAuthenticated(false);
   }

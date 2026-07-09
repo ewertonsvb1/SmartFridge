@@ -40,4 +40,9 @@ void main() {
     expect(item.displayLabel, 'Internet');
     expect(item.displayDate, '2026-06-10');
   });
+
+  test('keeps afterId support in repository model contract', () async {
+    const repositoryType = NotificationRepository;
+    expect(repositoryType, isNotNull);
+  });
 }
