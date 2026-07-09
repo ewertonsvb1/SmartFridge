@@ -19,6 +19,11 @@ void main() {
       ),
     );
 
+    expect(find.byKey(const ValueKey('product-barcode-field')), findsNothing);
+    expect(find.byKey(const ValueKey('product-barcode-scan-button')),
+        findsOneWidget);
+    expect(find.text('OU'), findsOneWidget);
+
     await tester.enterText(
       find.byKey(const ValueKey('product-name-field')),
       'L',
@@ -65,7 +70,8 @@ void main() {
     expect(find.text('Leite Italac'), findsOneWidget);
   });
 
-  testWidgets('ProductFormPage should fill catalog metadata when selecting a suggestion',
+  testWidgets(
+      'ProductFormPage should fill catalog metadata when selecting a suggestion',
       (WidgetTester tester) async {
     final repository = _FakeProductRepository()
       ..searchResults['Lei'] = [
@@ -213,7 +219,8 @@ void main() {
     );
   });
 
-  testWidgets('ProductFormPage should fill catalog metadata when barcode is found',
+  testWidgets(
+      'ProductFormPage should fill catalog metadata when barcode is found',
       (WidgetTester tester) async {
     final repository = _FakeProductRepository()
       ..barcodeResults['7896004400912'] =
@@ -232,16 +239,15 @@ void main() {
       ProviderScope(
         overrides: [
           productRepositoryProvider.overrideWithValue(repository),
+          barcodeScannerLauncherProvider.overrideWithValue(
+            (_) => Future.value('7896004400912'),
+          ),
         ],
         child: const MaterialApp(home: ProductFormPage()),
       ),
     );
 
-    await tester.enterText(
-      find.byKey(const ValueKey('product-barcode-field')),
-      '7896004400912',
-    );
-    await tester.pump(const Duration(milliseconds: 300));
+    await tester.tap(find.byKey(const ValueKey('product-barcode-scan-button')));
     await tester.pump();
     await tester.pump();
 
@@ -259,30 +265,136 @@ void main() {
     expect(nameField.controller!.text, 'Leite Italac Integral');
     expect(brandField.controller!.text, 'Italac');
     expect(quantityField.controller!.text, '1');
+    expect(find.textContaining('Codigo lido: 7896004400912'), findsOneWidget);
   });
 
   testWidgets('ProductFormPage should show message when barcode is not found',
       (WidgetTester tester) async {
-    final repository = _FakeProductRepository()..barcodeResults['7896004400912'] = null;
+    final repository = _FakeProductRepository()
+      ..barcodeResults['7896004400912'] = null;
 
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
           productRepositoryProvider.overrideWithValue(repository),
+          barcodeScannerLauncherProvider.overrideWithValue(
+            (_) => Future.value('7896004400912'),
+          ),
+        ],
+        child: const MaterialApp(home: ProductFormPage()),
+      ),
+    );
+
+    await tester.tap(find.byKey(const ValueKey('product-barcode-scan-button')));
+    await tester.pump();
+
+    expect(
+        find.textContaining('Codigo de barras nao encontrado'), findsOneWidget);
+    expect(find.textContaining('Cadastrar novo produto?'), findsOneWidget);
+  });
+
+  testWidgets(
+      'ProductFormPage should ignore scanner cancellation without querying backend',
+      (WidgetTester tester) async {
+    final repository = _FakeProductRepository();
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          productRepositoryProvider.overrideWithValue(repository),
+          barcodeScannerLauncherProvider.overrideWithValue(
+            (_) => Future.value(null),
+          ),
         ],
         child: const MaterialApp(home: ProductFormPage()),
       ),
     );
 
     await tester.enterText(
-      find.byKey(const ValueKey('product-barcode-field')),
-      '7896004400912',
+      find.byKey(const ValueKey('product-name-field')),
+      'Leite Manual',
     );
-    await tester.pump(const Duration(milliseconds: 300));
+
+    await tester.tap(find.byKey(const ValueKey('product-barcode-scan-button')));
     await tester.pump();
 
-    expect(find.textContaining('Codigo de barras nao encontrado'), findsOneWidget);
-    expect(find.textContaining('Cadastrar novo produto?'), findsOneWidget);
+    final nameField = tester.widget<TextFormField>(
+      find.byKey(const ValueKey('product-name-field')),
+    );
+
+    expect(repository.barcodeQueries, isEmpty);
+    expect(nameField.controller!.text, 'Leite Manual');
+    expect(find.byKey(const ValueKey('product-scanned-barcode-label')),
+        findsNothing);
+    expect(
+        find.textContaining('Codigo de barras nao encontrado'), findsNothing);
+  });
+
+  testWidgets(
+      'ProductFormPage should preserve scanned barcode when catalog does not find it',
+      (WidgetTester tester) async {
+    final repository = _FakeProductRepository()
+      ..barcodeResults['7896004400912'] = null;
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          productRepositoryProvider.overrideWithValue(repository),
+          barcodeScannerLauncherProvider.overrideWithValue(
+            (_) => Future.value('7896004400912'),
+          ),
+        ],
+        child: const MaterialApp(home: ProductFormPage()),
+      ),
+    );
+
+    await tester.tap(find.byKey(const ValueKey('product-barcode-scan-button')));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+      find.byKey(const ValueKey('product-name-field')),
+      'Leite Novo',
+    );
+    await tester.dragUntilVisible(
+      find.byKey(const ValueKey('product-quantity-field')),
+      find.byType(ListView),
+      const Offset(0, -200),
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('product-quantity-field')),
+      '2',
+    );
+
+    await tester.dragUntilVisible(
+      find.byKey(const ValueKey('product-manufacture-field')),
+      find.byType(ListView),
+      const Offset(0, -250),
+    );
+    await tester.dragUntilVisible(
+      find.byKey(const ValueKey('product-expiration-field')),
+      find.byType(ListView),
+      const Offset(0, -250),
+    );
+
+    tester
+        .widget<TextFormField>(
+          find.byKey(const ValueKey('product-manufacture-field')),
+        )
+        .controller!
+        .text = '2026-07-01';
+    tester
+        .widget<TextFormField>(
+          find.byKey(const ValueKey('product-expiration-field')),
+        )
+        .controller!
+        .text = '2026-08-01';
+    await tester.pump();
+
+    await tester.tap(find.text('Salvar'));
+    await tester.pump();
+
+    expect(repository.createdPayloads, hasLength(1));
+    expect(repository.createdPayloads.single['barcode'], '7896004400912');
   });
 
   testWidgets('ProductFormPage should submit catalog metadata on create',
@@ -372,13 +484,15 @@ class _FakeProductRepository extends ProductRepository {
   final List<Map<String, dynamic>> createdPayloads = [];
 
   @override
-  Future<List<CatalogProductSuggestionModel>> searchCatalog(String query) async {
+  Future<List<CatalogProductSuggestionModel>> searchCatalog(
+      String query) async {
     searchQueries.add(query);
     return searchResults[query] ?? const [];
   }
 
   @override
-  Future<CatalogProductSuggestionModel?> findCatalogByBarcode(String barcode) async {
+  Future<CatalogProductSuggestionModel?> findCatalogByBarcode(
+      String barcode) async {
     barcodeQueries.add(barcode);
     return barcodeResults[barcode];
   }

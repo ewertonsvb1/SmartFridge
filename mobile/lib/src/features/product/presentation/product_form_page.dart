@@ -6,7 +6,21 @@ import 'package:go_router/go_router.dart';
 import 'package:smartfridge_mobile/src/core/network/api_error.dart';
 import 'package:smartfridge_mobile/src/features/dashboard/presentation/dashboard_controller.dart';
 import 'package:smartfridge_mobile/src/features/product/data/product_repository.dart';
+import 'package:smartfridge_mobile/src/features/product/presentation/barcode_scanner_page.dart';
 import 'package:smartfridge_mobile/src/features/product/presentation/product_controller.dart';
+
+typedef BarcodeScannerLauncher = Future<String?> Function(BuildContext context);
+
+final barcodeScannerLauncherProvider = Provider<BarcodeScannerLauncher>((ref) {
+  return (context) {
+    return Navigator.of(context).push<String>(
+      MaterialPageRoute(
+        builder: (_) => const BarcodeScannerPage(),
+        fullscreenDialog: true,
+      ),
+    );
+  };
+});
 
 class ProductFormPage extends ConsumerStatefulWidget {
   const ProductFormPage({super.key, this.initialProduct});
@@ -22,7 +36,6 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
   static const _debounceDuration = Duration(milliseconds: 300);
 
   final _formKey = GlobalKey<FormState>();
-  final _barcodeController = TextEditingController();
   final _nameController = TextEditingController();
   final _brandController = TextEditingController();
   final _categoryController = TextEditingController();
@@ -39,7 +52,6 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
   bool _showBarcodeNotFound = false;
 
   Timer? _nameDebounceTimer;
-  Timer? _barcodeDebounceTimer;
 
   int _searchRequestId = 0;
   int _barcodeSearchRequestId = 0;
@@ -47,7 +59,7 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
 
   List<CatalogProductSuggestionModel> _suggestions = const [];
   String _lastQueriedText = '';
-  String _lastBarcodeQuery = '';
+  String? _barcodeValue;
 
   bool get _isEditing => widget.initialProduct != null;
 
@@ -65,26 +77,27 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
     _expController.text = product.expirationDate;
   }
 
-  void _onBarcodeChanged(String rawValue) {
-    if (_isEditing) {
+  Future<void> _scanBarcode() async {
+    if (_isEditing || _searchingBarcode) {
       return;
     }
 
-    _barcodeDebounceTimer?.cancel();
-    final barcode = rawValue.replaceAll(RegExp(r'\s+'), '');
-
-    if (barcode.isEmpty) {
-      setState(() {
-        _searchingBarcode = false;
-        _showBarcodeNotFound = false;
-        _lastBarcodeQuery = '';
-      });
+    final barcode = await ref.read(barcodeScannerLauncherProvider)(context);
+    if (!mounted || barcode == null) {
       return;
     }
 
-    _barcodeDebounceTimer = Timer(_debounceDuration, () {
-      _searchBarcode(barcode);
+    final normalizedBarcode = barcode.replaceAll(RegExp(r'\s+'), '');
+    if (normalizedBarcode.isEmpty) {
+      return;
+    }
+
+    setState(() {
+      _barcodeValue = normalizedBarcode;
+      _showBarcodeNotFound = false;
     });
+
+    await _searchBarcode(normalizedBarcode);
   }
 
   Future<void> _searchBarcode(String barcode) async {
@@ -92,20 +105,20 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
 
     setState(() {
       _searchingBarcode = true;
-      _lastBarcodeQuery = barcode;
+      _barcodeValue = barcode;
     });
 
     try {
-      final suggestion =
-          await ref.read(productRepositoryProvider).findCatalogByBarcode(barcode);
+      final suggestion = await ref
+          .read(productRepositoryProvider)
+          .findCatalogByBarcode(barcode);
       if (!mounted || requestId != _barcodeSearchRequestId) {
         return;
       }
 
       setState(() {
         _searchingBarcode = false;
-        _showBarcodeNotFound = suggestion == null &&
-            barcode == _barcodeController.text.replaceAll(RegExp(r'\s+'), '');
+        _showBarcodeNotFound = suggestion == null && barcode == _barcodeValue;
         if (suggestion != null) {
           _suggestions = const [];
           _showNoResults = false;
@@ -217,11 +230,12 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
       _brandController.text = detail.brand ?? '';
       _categoryController.text = detail.category ?? '';
       _defaultUnitController.text = detail.defaultUnit ?? '';
-      _defaultQuantityController.text = detail.defaultQuantity?.toString() ?? '';
+      _defaultQuantityController.text =
+          detail.defaultQuantity?.toString() ?? '';
 
       final detailBarcode = detail.barcode?.trim();
-      if ((detailBarcode ?? '').isNotEmpty && _barcodeController.text.trim().isEmpty) {
-        _barcodeController.text = detailBarcode!;
+      if ((detailBarcode ?? '').isNotEmpty && (_barcodeValue ?? '').isEmpty) {
+        _barcodeValue = detailBarcode;
       }
 
       setState(() {});
@@ -260,8 +274,6 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
   @override
   void dispose() {
     _nameDebounceTimer?.cancel();
-    _barcodeDebounceTimer?.cancel();
-    _barcodeController.dispose();
     _nameController.dispose();
     _brandController.dispose();
     _categoryController.dispose();
@@ -291,44 +303,58 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            TextFormField(
-              key: const ValueKey('product-barcode-field'),
-              controller: _barcodeController,
-              onChanged: _onBarcodeChanged,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Codigo de barras',
-                suffixIcon: _searchingBarcode
-                    ? const Padding(
-                        padding: EdgeInsets.all(12),
-                        child: SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
+            if (!_isEditing) ...[
+              FilledButton.icon(
+                key: const ValueKey('product-barcode-scan-button'),
+                onPressed: _loading || _searchingBarcode ? null : _scanBarcode,
+                icon: _searchingBarcode
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : null,
+                    : const Icon(Icons.qr_code_scanner_rounded),
+                label: const Text('Ler codigo de barras'),
               ),
-            ),
-            if (!_isEditing &&
-                _showBarcodeNotFound &&
-                _lastBarcodeQuery ==
-                    _barcodeController.text.replaceAll(RegExp(r'\s+'), '')) ...[
-              const SizedBox(height: 8),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF7F8F9),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFFD7DCE2)),
+              if ((_barcodeValue ?? '').isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Text(
+                  'Codigo lido: $_barcodeValue',
+                  key: const ValueKey('product-scanned-barcode-label'),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                child: const Text(
-                  'Codigo de barras nao encontrado.\nCadastrar novo produto?',
+              ],
+              if (_showBarcodeNotFound && (_barcodeValue ?? '').isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF7F8F9),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFFD7DCE2)),
+                  ),
+                  child: const Text(
+                    'Codigo de barras nao encontrado.\nCadastrar novo produto?',
+                  ),
                 ),
+              ],
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  const Expanded(child: Divider()),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text(
+                      'OU',
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                  ),
+                  const Expanded(child: Divider()),
+                ],
               ),
+              const SizedBox(height: 16),
             ],
-            const SizedBox(height: 12),
             TextFormField(
               key: const ValueKey('product-name-field'),
               controller: _nameController,
@@ -562,9 +588,9 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                                     : int.parse(
                                         _defaultQuantityController.text.trim(),
                                       ),
-                            barcode: _barcodeController.text.trim().isEmpty
+                            barcode: (_barcodeValue ?? '').trim().isEmpty
                                 ? null
-                                : _barcodeController.text.trim(),
+                                : _barcodeValue!.trim(),
                           );
                         }
 
