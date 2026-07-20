@@ -1,5 +1,5 @@
 # SmartFridge
-
+SmartFridge, evoluindo para SmartHouse, e um monorepo full-stack para gestao da casa com foco em geladeira, agenda e contas domesticas. O projeto combina um backend em Spring Boot com um app Flutter, oferecendo autenticacao, dashboard, controle de produtos, lista de compras, eventos da agenda e acompanhamento financeiro em uma unica plataforma. 
 Projeto completo do zero com:
 
 - Backend: Java 21 + Spring Boot 3 + JWT + PostgreSQL/H2
