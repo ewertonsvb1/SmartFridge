@@ -7,9 +7,6 @@ Projeto completo do zero com:
 
 ## Telas do app
 
-> Coloque as imagens nesta pasta para o GitHub renderizar automaticamente:
-> `assets/`
-
 ### Geladeira
 
 ![Resumo da Geladeira](assets/smart-house-geladeira-resumo.png)

@@ -1,6 +1,5 @@
 # Assets do README
 
-Coloque nesta pasta as imagens usadas pelo `README.md`.
 
 Arquivos esperados:
 
