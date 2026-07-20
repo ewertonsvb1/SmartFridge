@@ -5,6 +5,27 @@ Projeto completo do zero com:
 - Backend: Java 21 + Spring Boot 3 + JWT + PostgreSQL/H2
 - Mobile: Flutter + Riverpod + Dio
 
+## Telas do app
+
+> Coloque as imagens nesta pasta para o GitHub renderizar automaticamente:
+> `assets/`
+
+### Geladeira
+
+![Resumo da Geladeira](assets/smart-house-geladeira-resumo.png)
+
+### Agenda
+
+![Tela da Agenda](assets/smart-house-agenda.png)
+
+### Contas da Casa
+
+![Tela de Contas da Casa](assets/smart-house-contas-da-casa.png)
+
+### Lista da Geladeira
+
+![Lista da Geladeira](assets/smart-house-geladeira-lista.png)
+
 ## Estrutura
 
 - backend
